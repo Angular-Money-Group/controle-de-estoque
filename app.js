@@ -32,4 +32,4 @@ app.get("/", (req, res) => {
   return res.send("Hello World");
 });
 
-app.listen();
+app.listen(3000);
