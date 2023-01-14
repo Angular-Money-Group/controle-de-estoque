@@ -1,23 +1,22 @@
 const express = require("express");
 const productsRouter = express.Router();
-
+const cors = require('cors')
 const ProductsController = require("../controller/products.controller");
-const AuthController = require("../controller/auth.controller");
 
-productsRouter.get("/products", verifyToken, ProductsController.getProducts);
-productsRouter.post("/products", verifyToken, ProductsController.createProduct);
+productsRouter.get("/products", cors(), verifyToken, ProductsController.getProducts);
+productsRouter.post("/products", cors(), verifyToken, ProductsController.createProduct);
 productsRouter.put(
-  "/products/entry/:id",
+  "/products/entry/:id", cors(),
   verifyToken,
   ProductsController.entryProduct
 );
 productsRouter.put(
-  "/products/leave/:id",
+  "/products/leave/:id", cors(),
   verifyToken,
   ProductsController.leaveProduct
 );
 productsRouter.delete(
-  "/products/:id",
+  "/products/:id", cors(),
   verifyToken,
   ProductsController.deleteProduct
 );
