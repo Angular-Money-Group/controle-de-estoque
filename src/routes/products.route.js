@@ -30,7 +30,7 @@ function verifyToken(req, res, next) {
     req.token = bearerToken;
     next();
   } else {
-    return res.status(403).json({ message: "Forbidden" });
+    return res.status(403).json({  message: "Token de Autenticação Invalido" });
   }
 }
 

@@ -2,13 +2,21 @@ const productsSchema = require("../models/productsSchema");
 
 module.exports = class ProductsController {
   static async getProducts(req, res) {
+    	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
+      res.header("Access-Control-Allow-Origin", "*");
+      //Quais são os métodos que a conexão pode realizar na API
+        res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     const product = await productsSchema.find();
     return res.status(200).json(product);
   }
 
   static async createProduct(req, res) {
+    	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
+      res.header("Access-Control-Allow-Origin", "*");
+      //Quais são os métodos que a conexão pode realizar na API
+        res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
      
-    var {
+    let {
       name,
       priceCost,
       priceSell,
@@ -39,9 +47,11 @@ module.exports = class ProductsController {
     if (!priceCost) {
       return res.status(422).json({ msg: "Preço de custo é obrigatorio" });
     }
+    
     if (!priceSell) {
       return res.status(422).json({ msg: "Preço de venda é obrigatorio" });
     }
+
     if (!barCode) {
       return res.status(422).json({ msg: "Codigo de Barras é obrigatorio" });
     }
@@ -49,6 +59,7 @@ module.exports = class ProductsController {
     if (!category) {
       return res.status(422).json({ msg: "Categoria é obrigatorio" });
     }
+    
     if (!initialStock) {
       return res.status(422).json({ msg: "Quantidade é obrigatorio" });
     }
@@ -84,6 +95,11 @@ module.exports = class ProductsController {
   }
 
   static async entryProduct(req, res) {
+    	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
+      res.header("Access-Control-Allow-Origin", "*");
+      //Quais são os métodos que a conexão pode realizar na API
+        res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
+        
     const {  
       name,
       priceCost,
@@ -122,6 +138,10 @@ module.exports = class ProductsController {
   }
 
   static async leaveProduct(req, res) {
+    	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
+      res.header("Access-Control-Allow-Origin", "*");
+      //Quais são os métodos que a conexão pode realizar na API
+        res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     const {  
       name,
       priceCost,
@@ -161,6 +181,10 @@ module.exports = class ProductsController {
   }
 
   static async deleteProduct(req, res) {
+    	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
+      res.header("Access-Control-Allow-Origin", "*");
+      //Quais são os métodos que a conexão pode realizar na API
+        res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     const { id } = req.params;
 
     const product = await productsSchema.findById(id);
