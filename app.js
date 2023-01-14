@@ -8,7 +8,7 @@ const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
 const productsRouter = require("./src/routes/products.route");
 const authRouter = require("./src/routes/auth.route");
-const port = process.env.PORT || 3000;
+const port = 3000;
 
 app.use(express.json());
 app.use(cors())
