@@ -15,6 +15,7 @@ app.use(express.json());
 
 app.use(productsRouter);
 app.use(authRouter);
+app.use(cors());
 
 // Connect to MongoDB
 mongoose
