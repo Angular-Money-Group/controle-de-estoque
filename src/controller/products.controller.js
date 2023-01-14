@@ -3,7 +3,7 @@ const productsSchema = require("../models/productsSchema");
 module.exports = class ProductsController {
   static async getProducts(req, res) {
     	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
-      res.header("Access-Control-Allow-Origin", "*");
+      res.set("Access-Control-Allow-Origin", "*");
       //Quais são os métodos que a conexão pode realizar na API
         res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     const product = await productsSchema.find();
@@ -12,7 +12,7 @@ module.exports = class ProductsController {
 
   static async createProduct(req, res) {
     	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
-      res.header("Access-Control-Allow-Origin", "*");
+      res.set("Access-Control-Allow-Origin", "*");
       //Quais são os métodos que a conexão pode realizar na API
         res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
      
@@ -96,7 +96,7 @@ module.exports = class ProductsController {
 
   static async entryProduct(req, res) {
     	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
-      res.header("Access-Control-Allow-Origin", "*");
+      res.set("Access-Control-Allow-Origin", "*");
       //Quais são os métodos que a conexão pode realizar na API
         res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
         
@@ -139,7 +139,7 @@ module.exports = class ProductsController {
 
   static async leaveProduct(req, res) {
     	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
-      res.header("Access-Control-Allow-Origin", "*");
+      res.set("Access-Control-Allow-Origin", "*");
       //Quais são os métodos que a conexão pode realizar na API
         res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     const {  
@@ -181,8 +181,9 @@ module.exports = class ProductsController {
   }
 
   static async deleteProduct(req, res) {
+    
     	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
-      res.header("Access-Control-Allow-Origin", "*");
+      res.set("Access-Control-Allow-Origin", "*");
       //Quais são os métodos que a conexão pode realizar na API
         res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
     const { id } = req.params;
