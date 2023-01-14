@@ -8,6 +8,7 @@ const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASSWORD;
 const productsRouter = require("./src/routes/products.route");
 const authRouter = require("./src/routes/auth.route");
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors())
@@ -34,6 +35,6 @@ app.get("/", (req, res) => {
   return res.send("Hello World");
 });
 
-app.listen(80, function () {
+app.listen(port, function () {
   console.log('CORS-enabled web server listening on port 80')
 })
