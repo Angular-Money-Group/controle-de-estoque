@@ -7,7 +7,7 @@ const crypto = require("crypto");
 
 module.exports = class AuthController {
   static async login(req, res) {
-    if (req.method != "POST") {
+    if (req.method != "POST") { 
       return res
         .status(405)
         .json({ msg: "Metodo invalido, Utilize o Metodo POST para utilizar!" });
