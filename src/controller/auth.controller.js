@@ -30,6 +30,7 @@ module.exports = class AuthController {
       return res.status(400).json({ msg: "Usuario não encontrado" });
     }
 
+    try {
     //Check password
     const checkPassword = await bcrypt.compare(password, user.password);
 
@@ -37,7 +38,6 @@ module.exports = class AuthController {
       return res.status(422).json({ msg: "Senha invalida" });
     }
 
-    try {
       const secret = process.env.SECRET;
 
       const token = jwt.sign(

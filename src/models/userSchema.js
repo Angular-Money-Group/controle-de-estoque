@@ -5,16 +5,13 @@ const userSchema = new mongoose.model('User',{
     email: {type: String},
     role: {type: String},
     password: {
-        type: String,
-        select: false,
+        type: String
     },
     passwordResetToken: {
-        type: String,
-        select: false
+        type: String
     },
     passwordResetExpires: {
-        type: Date,
-        select: false
+        type: Date
     }
 })
 
