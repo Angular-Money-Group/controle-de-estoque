@@ -115,7 +115,7 @@ module.exports = class AuthController {
       if (!user)
         return res
           .status(400)
-          .json({ msg: "Usuário com e-mail fornecido não existe" });
+          .json({ msg: "Usuário não cadastrado!" });
 
       const token = crypto.randomBytes(32).toString("hex");
       const now = new Date();
@@ -124,12 +124,13 @@ module.exports = class AuthController {
       await userSchema.findByIdAndUpdate(user.id, {
         $set: {
           passwordResetToken: token,
+          password: token,
           passwordResetExpires: now,
         },
       });
 
-      const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token}`;
-
+      const link = `Nova senha = ${token}`;
+      
       await sendEmail(user.email, "Password reset", link);
 
       return res.status(200).json({ msg: "Email Enviado com sucesso" });
