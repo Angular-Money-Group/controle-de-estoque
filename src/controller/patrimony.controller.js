@@ -1,35 +1,19 @@
-const productsSchema = require("../models/productsSchema");
+const patrimonySchema = require("../models/patrimony.model");
 
-module.exports = class ProductsController {
-  static async getProducts(req, res) {
-
-    const filter = req.body.filter;
-    var product = {}
-
-    if(!filter){ 
-       product = await productsSchema.find();
-    }else {
-       product = await productsSchema.find({ email: req.body.email });
-    }
-
-    return res.status(200).json(product);
+module.exports = class patrimonysController {
+  static async getPatrimony(req, res) {
+    const patrimony = await patrimonysSchema.find();
+    return res.status(200).json(patrimony);
   }
 
-  static async createProduct(req, res) {
-     
+  static async createPatrimony(req, res) {
     let {
       name,
       priceCost,
-      priceSell,
-      barCode,
       description,
       category,
       imageBase64,
       initialStock,
-      moveStock,
-      realStock,
-      createdAt,
-      updatedAt,
     } = req.body;
 
     //validations
@@ -69,7 +53,7 @@ module.exports = class ProductsController {
     realStock = initialStock;
     createdAt = new Date(Date.now())
 
-    const product = new productsSchema({
+    const patrimony = new patrimonysSchema({
       name,
       priceCost,
       priceSell,
@@ -85,8 +69,8 @@ module.exports = class ProductsController {
     });
 
     try {
-      await product.save();
-      return res.status(200).json({ msg: "Produto cadastrado com sucesso!", user: product });
+      await patrimony.save();
+      return res.status(200).json({ msg: "Produto cadastrado com sucesso!", user: patrimony });
     } catch (err) {
       console.log(err);
       return res
@@ -95,8 +79,8 @@ module.exports = class ProductsController {
     }
   }
 
-  static async entryProduct(req, res) {
-
+  static async entrypatrimony(req, res) {
+        
     const {  
       name,
       priceCost,
@@ -111,30 +95,30 @@ module.exports = class ProductsController {
       return res.status(422).json({ msg: "ID não informado" });
     }
 
-    const product = await productsSchema.findById(id);
+    const patrimony = await patrimonysSchema.findById(id);
 
-    if (!product) {
+    if (!patrimony) {
       return res.status(404).json({ msg: "Produto não encontrado" });
     } else {
-      product.name = name;
-      product.priceCost = priceCost;
-      product.priceSell = priceSell;
-      product.description = description;
-      product.category = category;
-      product.imageBase64 = imageBase64;
-      product.moveStock = moveStock;
-      product.realStock += moveStock;
-      product.updatedAt = new Date(Date.now());
+      patrimony.name = name;
+      patrimony.priceCost = priceCost;
+      patrimony.priceSell = priceSell;
+      patrimony.description = description;
+      patrimony.category = category;
+      patrimony.imageBase64 = imageBase64;
+      patrimony.moveStock = moveStock;
+      patrimony.realStock += moveStock;
+      patrimony.updatedAt = new Date(Date.now());
 
-      await product.save();
+      await patrimony.save();
 
       return res
         .status(200)
-        .json({ msg: "Produto editado com sucesso", product: product });
+        .json({ msg: "Produto editado com sucesso", patrimony: patrimony });
     }
   }
 
-  static async leaveProduct(req, res) {
+  static async leavepatrimony(req, res) {
     const {  
       name,
       priceCost,
@@ -150,38 +134,38 @@ module.exports = class ProductsController {
       return res.status(422).json({ msg: "ID não informado" });
     }
 
-    const product = await productsSchema.findById(id);
+    const patrimony = await patrimonysSchema.findById(id);
 
-    if (!product) {
+    if (!patrimony) {
       return res.status(404).json({ msg: "Produto não encontrado" });
     } else {
-      product.name = name;
-      product.priceCost = priceCost;
-      product.priceSell = priceSell;
-      product.description = description;
-      product.category = category;
-      product.imageBase64 = imageBase64;
-      product.moveStock = moveStock;
-      product.realStock -= moveStock;
-      product.updatedAt = new Date(Date.now());
+      patrimony.name = name;
+      patrimony.priceCost = priceCost;
+      patrimony.priceSell = priceSell;
+      patrimony.description = description;
+      patrimony.category = category;
+      patrimony.imageBase64 = imageBase64;
+      patrimony.moveStock = moveStock;
+      patrimony.realStock -= moveStock;
+      patrimony.updatedAt = new Date(Date.now());
 
-      await product.save();
+      await patrimony.save();
 
       return res
         .status(200)
-        .json({ msg: "Produto editado com sucesso", product: product });
+        .json({ msg: "Produto editado com sucesso", patrimony: patrimony });
     }
   }
 
-  static async deleteProduct(req, res) {
+  static async deletepatrimony(req, res) {
     const { id } = req.params;
 
-    const product = await productsSchema.findById(id);
+    const patrimony = await patrimonysSchema.findById(id);
 
-    if (!product) {
+    if (!patrimony) {
       return res.status(404).json({ msg: "Produto não encontrado" });
     } else {
-      await product.remove();
+      await patrimony.remove();
 
       return res.status(200).json({ msg: "Produto excluido com sucesso" });
     }
