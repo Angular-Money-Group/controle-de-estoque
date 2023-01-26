@@ -4,6 +4,7 @@ const cors = require('cors')
 const ProductsController = require("../controller/products.controller");
 
 productsRouter.get("/products", cors(), verifyToken, ProductsController.getProducts);
+productsRouter.get("/products/:id", cors(), verifyToken, ProductsController.getProductsById);
 productsRouter.post("/products", cors(), verifyToken, ProductsController.createProduct);
 productsRouter.put(
   "/products/entry/:id", cors(),

@@ -124,7 +124,7 @@ module.exports = class AuthController {
       await userSchema.findByIdAndUpdate(user.id, {
         $set: {
           passwordResetToken: token,
-          password: token,
+          password: 'resetPassword1234321',
           passwordResetExpires: now,
         },
       });

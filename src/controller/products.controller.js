@@ -2,17 +2,24 @@ const productsSchema = require("../models/productsSchema");
 
 module.exports = class ProductsController {
   static async getProducts(req, res) {
+    var product = await productsSchema.find();
+    return res.status(200).json(product);
+  }
 
-    const filter = req.body.filter;
-    var product = {}
+  static async getProductsById(req, res) {
+    const id = req.params;
 
-    if(!filter){ 
-       product = await productsSchema.find();
-    }else {
-       product = await productsSchema.find({ email: req.body.email });
+    if(!id) {
+      return res.status(422).json({ msg: "ID não informado" });
     }
 
-    return res.status(200).json(product);
+    const product = await productsSchema.findById(id);
+
+    if(!product) {
+      return res.status(404).json({ msg: "Produto não encontrado" });
+    }
+    
+    return res.status(200).json({data: product});
   }
 
   static async createProduct(req, res) {

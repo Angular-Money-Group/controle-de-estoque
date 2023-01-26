@@ -50,8 +50,8 @@ module.exports = class patrimonysController {
     }
 
     // Add createdAt and stock
-    realStock = initialStock;
-    createdAt = new Date(Date.now())
+    var realStock = initialStock;
+    var createdAt = new Date(Date.now())
 
     const patrimony = new patrimonysSchema({
       name,
