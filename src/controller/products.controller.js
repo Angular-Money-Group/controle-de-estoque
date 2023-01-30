@@ -69,7 +69,7 @@ module.exports = class ProductsController {
     }
     
     if (!initialStock) {
-      return res.status(422).json({ msg: "Quantidade é obrigatorio" });
+      return res.status(422).json({ msg: "Estoque Inicial é obrigatorio" });
     }
 
     // Add createdAt and stock
