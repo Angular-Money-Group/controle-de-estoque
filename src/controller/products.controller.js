@@ -2,8 +2,25 @@ const productsSchema = require("../models/productsSchema");
 
 module.exports = class ProductsController {
   static async getProducts(req, res) {
-    var product = await productsSchema.find();
-    return res.status(200).json(product);
+    if(req.query.filter){
+      try{
+        let productsByName = await productsSchema.find({ name: { $regex: req.query.filter, $options: 'i' } });
+        let productsByBarCode = await productsSchema.find({ barCode: { $regex: req.query.filter, $options: 'i' } });
+
+        let allProducts = [...new Set([...productsByName, ...productsByBarCode])];
+        if(allProducts.length == 0){
+          return res.status(204).json({message: 'Nenhum produto encontrado', data: allProducts});
+        } else {
+          return res.status(200).json({message: 'Operação realizada com sucesso', data: allProducts});
+        }
+      } catch(err) {
+        return res.status(400).json({message: 'Erro ao consultar', err});
+      }
+    } else {
+      let product = await productsSchema.find();
+      return res.status(200).json({message: 'Operação realizada com sucesso', data: product});
+
+    }
   }
 
   static async getProductsById(req, res) {
@@ -102,83 +119,33 @@ module.exports = class ProductsController {
     }
   }
 
-  static async entryProduct(req, res) {
-
-    const {  
-      name,
-      priceCost,
-      priceSell,
-      description,
-      category,
-      moveStock,
-      imageBase64, 
-    } = req.body;
+  static async updateProduct(req, res) {
+    const { name, priceCost, priceSell, description, category, moveStock } = req.body;
     const { id } = req.params;
-    if(!id) {
-      return res.status(422).json({ msg: "ID não informado" });
+    
+    if (!id) {
+    return res.status(422).json({ msg: "ID não informado" });
     }
-
+    
     const product = await productsSchema.findById(id);
-
+    
     if (!product) {
-      return res.status(404).json({ msg: "Produto não encontrado" });
-    } else {
-      product.name = name;
-      product.priceCost = priceCost;
-      product.priceSell = priceSell;
-      product.description = description;
-      product.category = category;
-      product.imageBase64 = imageBase64;
-      product.moveStock = moveStock;
-      product.realStock += moveStock;
-      product.updatedAt = new Date(Date.now());
-
-      await product.save();
-
-      return res
-        .status(200)
-        .json({ msg: "Produto editado com sucesso", product: product });
+    return res.status(404).json({ msg: "Produto não encontrado" });
     }
-  }
-
-  static async leaveProduct(req, res) {
-    const {  
-      name,
-      priceCost,
-      priceSell,
-      description,
-      imageBase64,
-      moveStock
-    } = req.body;
-
-    const { id } = req.params;
-
-    if(!id) {
-      return res.status(422).json({ msg: "ID não informado" });
+    
+    product.name = name;
+    product.priceCost = priceCost;
+    product.priceSell = priceSell;
+    product.description = description;
+    product.category = category;
+    product.moveStock = moveStock;
+    product.realStock += moveStock;
+    product.updatedAt = new Date(Date.now());
+    
+    await product.save();
+    
+    return res.status(200).json({ msg: "Produto editado com sucesso", product });
     }
-
-    const product = await productsSchema.findById(id);
-
-    if (!product) {
-      return res.status(404).json({ msg: "Produto não encontrado" });
-    } else {
-      product.name = name;
-      product.priceCost = priceCost;
-      product.priceSell = priceSell;
-      product.description = description;
-      product.category = category;
-      product.imageBase64 = imageBase64;
-      product.moveStock = moveStock;
-      product.realStock -= moveStock;
-      product.updatedAt = new Date(Date.now());
-
-      await product.save();
-
-      return res
-        .status(200)
-        .json({ msg: "Produto editado com sucesso", product: product });
-    }
-  }
 
   static async deleteProduct(req, res) {
     const { id } = req.params;

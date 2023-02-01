@@ -1,23 +1,35 @@
 const express = require("express");
 const productsRouter = express.Router();
-const cors = require('cors')
+const cors = require("cors");
 const ProductsController = require("../controller/products.controller");
 
-productsRouter.get("/products", cors(), verifyToken, ProductsController.getProducts);
-productsRouter.get("/products/:id", cors(), verifyToken, ProductsController.getProductsById);
-productsRouter.post("/products", cors(), verifyToken, ProductsController.createProduct);
-productsRouter.put(
-  "/products/entry/:id", cors(),
+productsRouter.get(
+  "/products",
+  cors(),
   verifyToken,
-  ProductsController.entryProduct
+  ProductsController.getProducts
+);
+productsRouter.get(
+  "/products/:id",
+  cors(),
+  verifyToken,
+  ProductsController.getProductsById
+);
+productsRouter.post(
+  "/products",
+  cors(),
+  verifyToken,
+  ProductsController.createProduct
 );
 productsRouter.put(
-  "/products/leave/:id", cors(),
+  "/products/:id",
+  cors(),
   verifyToken,
-  ProductsController.leaveProduct
+  ProductsController.updateProduct
 );
 productsRouter.delete(
-  "/products/:id", cors(),
+  "/products/:id",
+  cors(),
   verifyToken,
   ProductsController.deleteProduct
 );
@@ -30,7 +42,7 @@ function verifyToken(req, res, next) {
     req.token = bearerToken;
     next();
   } else {
-    return res.status(403).json({  message: "Token de Autenticação Invalido" });
+    return res.status(403).json({ message: "Token de Autenticação Invalido" });
   }
 }
 
