@@ -7,12 +7,6 @@ const crypto = require("crypto");
 
 module.exports = class AuthController {
   static async login(req, res) {
-    if (req.method != "POST") { 
-      return res
-        .status(405)
-        .json({ msg: "Metodo invalido, Utilize o Metodo POST para utilizar!" });
-    }
-
     const { email, password } = req.body;
 
     if (!email) {
@@ -48,17 +42,17 @@ module.exports = class AuthController {
       );
       res
         .status(200)
-        .json({ msg: "Autenticação realizada com sucesso!", token: token });
+        .json({ message: "Autenticação realizada com sucesso!", token: token });
     } catch (err) {
       console.log(err);
       return res
         .status(500)
-        .json({ msg: "Erro Interno do servidor, tente novamente mais tarde" });
+        .json({ message: "Erro Interno do servidor, tente novamente mais tarde" });
     }
   }
 
   static async register(req, res) {
-    const { name, email, role, password, confirmpassword } = req.body;
+    const { name, email, role, password } = req.body;
 
     //validations
     if (!name) return res.status(422).json({ msg: "Nome é obrigatorio" });
@@ -68,8 +62,6 @@ module.exports = class AuthController {
     if (!email) return res.status(422).json({ msg: "Email é obrigatorio" });
 
     if (!password) return res.status(422).json({ msg: "Senha é obrigatorio" });
-
-    if (password !== confirmpassword) return res.status(422).json({ msg: "As senhas não conferem" });
 
     //Check if exist user
     const userExists = await userSchema.findOne({ email: email });
@@ -107,10 +99,10 @@ module.exports = class AuthController {
   }
 
   static async forgotPassword(req, res) {
-    if (!req.body.email)
+    if (!req.query.email)
       return res.status(422).json({ msg: "Email é obrigatório" });
     try {
-      const user = await userSchema.findOne({ email: req.body.email });
+      const user = await userSchema.findOne({ email: req.query.email });
 
       if (!user)
         return res
@@ -144,7 +136,7 @@ module.exports = class AuthController {
 
   static async resetPassword(req, res) {
     try {
-      const password = req.body.password;
+      const password = req.query.password;
 
       if (!password)
         return res.status(422).json({ msg: "Senha é obrigatorio" });
@@ -168,7 +160,7 @@ module.exports = class AuthController {
       });
 
       await user.save();
-      res.status(203).json({msg: "password reset sucessfully."});
+      res.status(200).json({msg: "password reset sucessfully."});
     } catch (error) {
       res.send("An error occured");
       console.log(error);

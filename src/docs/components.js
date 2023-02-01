@@ -202,6 +202,61 @@ module.exports = {
           },
         },
       },
+      loginRequest: {
+        type: "object", // data type
+        properties: {
+          email: {
+            type: "string", // data type
+            description: "Email do usuário", // desc
+            example: "teste@teste.com.br", // example of a completed value
+          },
+          password: {
+            type: "string", // data type
+            description: "Senha do usuário", // desc
+            example: "123456", // example of a completed value
+          },
+        },
+      },
+      loginResponse: {
+        type: "object", // data type
+        properties: {
+          message: {
+            type: "string", // data type
+            description: "Mensagem de sucesso", // desc
+            example: "Login realizado com sucesso", // example of a completed value
+          },
+          token: {
+            type: "string", // data type
+            description: "auth token", // desc
+            example: "qieljrghsdilurghbosdiruvbdfs", // example of a completed value
+          },
+        },
+      },
+      createUserRequest: {
+        type: "object", // data type
+        properties: {
+          name: {
+            type: "string", // data type
+            description: "Nome do usuário", // desc
+            example: "João da Silva", // example of a completed value
+          },
+          email: {
+            type: "string", // data type
+            description: "Email do usuário", // desc
+            example: "teste@teste.com.br", // example of a completed value
+          },
+          password: {
+            type: "string", // data type
+            description: "Senha do usuário", // desc
+            example: "123456", // example of a completed value
+          },
+          role: {
+            type: "string", // data type
+            description: "Função do usuário", // desc
+            example: "admin", // example of a completed value
+          },
+        },
+      },
     },
   },
 };

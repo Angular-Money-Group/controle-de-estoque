@@ -54,16 +54,16 @@ module.exports = {
         },
         description: "Editar produto pelo id", // param desc.
       },
-      {
-        name: "body", // name of the param
-        in: "body", // location of the param
-        required: true, // Mandatory param
-        schema: {
-          $ref: "#/components/schemas/updateProductRequest",
-        },
-        description: "Editar produto pelo id", // param desc.
-      },
     ], // expected params.
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/updateProductRequest", // id model
+          },
+        },
+      },
+    },    
     // expected responses
     responses: {
       // response code

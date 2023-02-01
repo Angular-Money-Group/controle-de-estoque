@@ -42,19 +42,17 @@ module.exports = {
         }
      ],
     tags: ["Produtos"], // operation's tag.
-    description: "Pesquisar e Filtrar produtos", // operation's desc.
+    description: "Criar produtos", // operation's desc.
     operationId: "createProduct", // unique operation id.
-    parameters: [
-      {
-        name: "id", // name of the param
-        in: "body", // location of the param
-        required: true, // Mandatory param
-        schema: {
-          $ref: "#/components/schemas/createProductRequest",
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/createProductRequest", // id model
+          },
         },
-        description: "Buscar produto pelo id", // param desc.
       },
-    ], // expected params.
+    },
     // expected responses
     responses: {
       // response code
