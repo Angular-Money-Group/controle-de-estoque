@@ -2,45 +2,52 @@ const productsSchema = require("../models/productsSchema");
 
 module.exports = class ProductsController {
   static async getProducts(req, res) {
-    if(req.query.filter){
-      try{
-        let productsByName = await productsSchema.find({ name: { $regex: req.query.filter, $options: 'i' } });
-        let productsByBarCode = await productsSchema.find({ barCode: { $regex: req.query.filter, $options: 'i' } });
+    if (req.query.filter) {
+      try {
+        let productsByName = await productsSchema.find({
+          name: { $regex: req.query.filter, $options: "i" },
+        });
+        let productsByBarCode = await productsSchema.find({
+          barCode: { $regex: req.query.filter, $options: "i" },
+        });
 
-        let allProducts = [...new Set([...productsByName, ...productsByBarCode])];
-        if(allProducts.length == 0){
-          return res.status(204).json({message: 'Nenhum produto encontrado', data: allProducts});
-        } else {
-          return res.status(200).json({message: 'Operação realizada com sucesso', data: allProducts});
-        }
-      } catch(err) {
-        return res.status(400).json({message: 'Erro ao consultar', err});
+        let allProducts = [
+          ...new Set([...productsByName, ...productsByBarCode]),
+        ];
+        return res
+          .status(200)
+          .json({
+            message: "Operação realizada com sucesso",
+            data: allProducts,
+          });
+      } catch (err) {
+        return res.status(400).json({ message: "Erro ao consultar", err });
       }
     } else {
       let product = await productsSchema.find();
-      return res.status(200).json({message: 'Operação realizada com sucesso', data: product});
-
+      return res
+        .status(200)
+        .json({ message: "Operação realizada com sucesso", data: product });
     }
   }
 
   static async getProductsById(req, res) {
     const id = req.params;
 
-    if(!id) {
+    if (!id) {
       return res.status(422).json({ msg: "ID não informado" });
     }
 
     const product = await productsSchema.findById(id);
 
-    if(!product) {
+    if (!product) {
       return res.status(404).json({ msg: "Produto não encontrado" });
     }
-    
-    return res.status(200).json({data: product});
+
+    return res.status(200).json({ data: product });
   }
 
   static async createProduct(req, res) {
-     
     let {
       name,
       priceCost,
@@ -58,11 +65,19 @@ module.exports = class ProductsController {
 
     //validations
     if (createdAt) {
-      return res.status(422).json({ msg: "Não é permitido enviar a data de criação, ela será automatica!" });
+      return res
+        .status(422)
+        .json({
+          msg: "Não é permitido enviar a data de criação, ela será automatica!",
+        });
     }
 
     if (updatedAt) {
-      return res.status(422).json({ msg: "Não é permitido enviar a data de atualização, ela será automatica!" });
+      return res
+        .status(422)
+        .json({
+          msg: "Não é permitido enviar a data de atualização, ela será automatica!",
+        });
     }
 
     if (!name) {
@@ -72,7 +87,7 @@ module.exports = class ProductsController {
     if (!priceCost) {
       return res.status(422).json({ msg: "Preço de custo é obrigatorio" });
     }
-    
+
     if (!priceSell) {
       return res.status(422).json({ msg: "Preço de venda é obrigatorio" });
     }
@@ -84,14 +99,14 @@ module.exports = class ProductsController {
     if (!category) {
       return res.status(422).json({ msg: "Categoria é obrigatorio" });
     }
-    
+
     if (!initialStock) {
       return res.status(422).json({ msg: "Estoque Inicial é obrigatorio" });
     }
 
     // Add createdAt and stock
     realStock = initialStock;
-    createdAt = new Date(Date.now())
+    createdAt = new Date(Date.now());
 
     const product = new productsSchema({
       name,
@@ -110,7 +125,9 @@ module.exports = class ProductsController {
 
     try {
       await product.save();
-      return res.status(200).json({ msg: "Produto cadastrado com sucesso!", user: product });
+      return res
+        .status(200)
+        .json({ msg: "Produto cadastrado com sucesso!", user: product });
     } catch (err) {
       console.log(err);
       return res
@@ -120,19 +137,20 @@ module.exports = class ProductsController {
   }
 
   static async updateProduct(req, res) {
-    const { name, priceCost, priceSell, description, category, moveStock } = req.body;
+    const { name, priceCost, priceSell, description, category, moveStock } =
+      req.body;
     const { id } = req.params;
-    
+
     if (!id) {
-    return res.status(422).json({ msg: "ID não informado" });
+      return res.status(422).json({ msg: "ID não informado" });
     }
-    
+
     const product = await productsSchema.findById(id);
-    
+
     if (!product) {
-    return res.status(404).json({ msg: "Produto não encontrado" });
+      return res.status(404).json({ msg: "Produto não encontrado" });
     }
-    
+
     product.name = name;
     product.priceCost = priceCost;
     product.priceSell = priceSell;
@@ -141,11 +159,13 @@ module.exports = class ProductsController {
     product.moveStock = moveStock;
     product.realStock += moveStock;
     product.updatedAt = new Date(Date.now());
-    
+
     await product.save();
-    
-    return res.status(200).json({ msg: "Produto editado com sucesso", product });
-    }
+
+    return res
+      .status(200)
+      .json({ msg: "Produto editado com sucesso", product });
+  }
 
   static async deleteProduct(req, res) {
     const { id } = req.params;
@@ -160,4 +180,4 @@ module.exports = class ProductsController {
       return res.status(200).json({ msg: "Produto excluido com sucesso" });
     }
   }
-}
+};
