@@ -13,6 +13,7 @@ module.exports = class PDVController {
       userID,
       products,
       totalSell,
+      state: "Aberto",
       createdAt: Date.now(),
     });
 
