@@ -257,6 +257,41 @@ module.exports = {
           },
         },
       },
+      createPDVRequest: {
+        type: "object", // data type
+        properties: {
+          userID: {
+            type: "string", // data type
+            description: "ID do usuário", // desc
+            example: "60e1c5b0b0b5a40015b5b0a1", // example of a completed value
+          },
+          products: {
+            type: "array", // data type
+            description: "Produtos do PDV", // desc
+            example: [
+              {
+                productID: "60e1c5b0b0b5a40015b5b0a1",
+                quantity: 10,
+              },
+            ], // example of a completed value
+          },
+          totalSell: {
+            type: "number", // data type
+            description: "Total da venda", // desc
+            example: 10, // example of a completed value
+          },
+        },
+      },
+      genericResponse: {
+        type: "object", // data type
+        properties: {
+          message: {
+            type: "string", // data type
+            description: "Mensagem de sucesso", // desc
+            example: "Venda realizada com sucesso", // example of a completed value
+          },
+        },
+      }
     },
   },
 };

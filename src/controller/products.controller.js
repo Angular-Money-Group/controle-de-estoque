@@ -35,13 +35,13 @@ module.exports = class ProductsController {
     const id = req.params;
 
     if (!id) {
-      return res.status(422).json({ msg: "ID não informado" });
+      return res.status(422).json({ message: "ID não informado" });
     }
 
     const product = await productsSchema.findById(id);
 
     if (!product) {
-      return res.status(404).json({ msg: "Produto não encontrado" });
+      return res.status(404).json({ message: "Produto não encontrado" });
     }
 
     return res.status(200).json({ data: product });
@@ -68,7 +68,7 @@ module.exports = class ProductsController {
       return res
         .status(422)
         .json({
-          msg: "Não é permitido enviar a data de criação, ela será automatica!",
+          message: "Não é permitido enviar a data de criação, ela será automatica!",
         });
     }
 
@@ -76,32 +76,32 @@ module.exports = class ProductsController {
       return res
         .status(422)
         .json({
-          msg: "Não é permitido enviar a data de atualização, ela será automatica!",
+          message: "Não é permitido enviar a data de atualização, ela será automatica!",
         });
     }
 
     if (!name) {
-      return res.status(422).json({ msg: "Nome é obrigatorio" });
+      return res.status(422).json({ message: "Nome é obrigatorio" });
     }
 
     if (!priceCost) {
-      return res.status(422).json({ msg: "Preço de custo é obrigatorio" });
+      return res.status(422).json({ message: "Preço de custo é obrigatorio" });
     }
 
     if (!priceSell) {
-      return res.status(422).json({ msg: "Preço de venda é obrigatorio" });
+      return res.status(422).json({ message: "Preço de venda é obrigatorio" });
     }
 
     if (!barCode) {
-      return res.status(422).json({ msg: "Codigo de Barras é obrigatorio" });
+      return res.status(422).json({ message: "Codigo de Barras é obrigatorio" });
     }
 
     if (!category) {
-      return res.status(422).json({ msg: "Categoria é obrigatorio" });
+      return res.status(422).json({ message: "Categoria é obrigatorio" });
     }
 
     if (!initialStock) {
-      return res.status(422).json({ msg: "Estoque Inicial é obrigatorio" });
+      return res.status(422).json({ message: "Estoque Inicial é obrigatorio" });
     }
 
     // Add createdAt and stock
@@ -127,28 +127,33 @@ module.exports = class ProductsController {
       await product.save();
       return res
         .status(200)
-        .json({ msg: "Produto cadastrado com sucesso!", user: product });
+        .json({ message: "Produto cadastrado com sucesso!", data: product });
     } catch (err) {
       console.log(err);
       return res
         .status(500)
-        .json({ msg: "Erro Interno do servidor, tente novamente mais tarde" });
+        .json({ message: "Erro Interno do servidor, tente novamente mais tarde" });
     }
   }
 
   static async updateProduct(req, res) {
+    try{
     const { name, priceCost, priceSell, description, category, moveStock } =
       req.body;
     const { id } = req.params;
 
     if (!id) {
-      return res.status(422).json({ msg: "ID não informado" });
+      return res.status(422).json({ message: "ID não informado" });
+    }
+
+    if(!moveStock){
+      return res.status(422).json({ message: "Movimento de estoque não informado" });
     }
 
     const product = await productsSchema.findById(id);
 
     if (!product) {
-      return res.status(404).json({ msg: "Produto não encontrado" });
+      return res.status(404).json({ message: "Produto não encontrado" });
     }
 
     product.name = name;
@@ -158,13 +163,19 @@ module.exports = class ProductsController {
     product.category = category;
     product.moveStock = moveStock;
     product.realStock += moveStock;
-    product.updatedAt = new Date(Date.now());
+    product.updatedAt = Date.now()
 
     await product.save();
 
     return res
       .status(200)
-      .json({ msg: "Produto editado com sucesso", product });
+      .json({ message: "Produto editado com sucesso", data: product });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ message: "Erro Interno do servidor, tente novamente mais tarde", err });
+    }
   }
 
   static async deleteProduct(req, res) {
@@ -173,11 +184,11 @@ module.exports = class ProductsController {
     const product = await productsSchema.findById(id);
 
     if (!product) {
-      return res.status(404).json({ msg: "Produto não encontrado" });
+      return res.status(404).json({ message: "Produto não encontrado" });
     } else {
       await product.remove();
 
-      return res.status(200).json({ msg: "Produto excluido com sucesso" });
+      return res.status(200).json({ message: "Produto excluido com sucesso" });
     }
   }
 };
