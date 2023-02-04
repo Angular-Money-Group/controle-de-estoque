@@ -13,6 +13,7 @@ const dbPassword = process.env.DB_PASSWORD;
 
 const productsRouter = require("./src/routes/products.route");
 const authRouter = require("./src/routes/auth.route");
+const patrimonyRouter = require('./src/routes/patrimony.route')
 const pdvRouter = require("./src/routes/pdv.route");
 
 const docs = require('./src/docs');
