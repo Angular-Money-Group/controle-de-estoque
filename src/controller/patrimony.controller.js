@@ -1,4 +1,4 @@
-const patrimonySchema = require("../models/patrimony.model");
+const patrimonySchema = require("../models/patrimonySchema");
 
 module.exports = class PatrimonyController {
   static async getPatrimony(req, res) {

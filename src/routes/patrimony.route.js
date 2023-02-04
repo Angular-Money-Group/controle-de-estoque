@@ -1,14 +1,15 @@
 const express = require("express");
 const patrimonyRouter = express.Router();
-const PatrimonyController = require("../controllers/patrimony.controller");
+const patrimonyController = require("../controller/patrimony.controller");
 
-patrimonyRouter.get("/patrimony", verifyToken, PatrimonyController.getPatrimony);
-patrimonyRouter.post("/patrimony", verifyToken, PatrimonyController.createPatrimony);
-patrimonyRouter.put("/patrimony/:id", verifyToken, PatrimonyController.updatePatrimony);
+patrimonyRouter.get("/patrimony", verifyToken, patrimonyController.getPatrimony);
+patrimonyRouter.post("/patrimony", verifyToken, patrimonyController.createPatrimony);
+patrimonyRouter.put("/patrimony/:id", verifyToken, patrimonyController.updatePatrimony);
 patrimonyRouter.delete(
   "/patrimony/:id",
   verifyToken,
-  PatrimonyController.deletePatrimony
+  () => 
+  patrimonyController.deletePatrimony
 );
 
 function verifyToken(req, res, next) {
