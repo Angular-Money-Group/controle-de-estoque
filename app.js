@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(cors())
 app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(docs));
 
+app.use(patrimonyRouter)
 app.use(productsRouter);
 app.use(authRouter);
 app.use(pdvRouter);
