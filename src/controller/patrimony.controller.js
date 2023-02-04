@@ -2,7 +2,7 @@ const patrimonySchema = require("../models/patrimonySchema");
 
 module.exports = class PatrimonyController {
   static async getPatrimony(req, res) {
-    const patrimony = await patrimonysSchema.find();
+    const patrimony = await patrimonySchema.find();
     return res
       .status(200)
       .json({ message: "Operação realizada com sucesso!", data: patrimony });
@@ -28,7 +28,7 @@ module.exports = class PatrimonyController {
     var realStock = initialStock;
     var createdAt = new Date(Date.now());
 
-    const patrimony = new patrimonysSchema({
+    const patrimony = new patrimonySchema({
       name,
       priceCost,
       description,
@@ -88,7 +88,7 @@ module.exports = class PatrimonyController {
   static async deletepatrimony(req, res) {
     const { id } = req.params;
 
-    const patrimony = await patrimonysSchema.findById(id);
+    const patrimony = await patrimonySchema.findById(id);
 
     if (!patrimony) {
       return res.status(404).json({ message: "Produto não encontrado" });
