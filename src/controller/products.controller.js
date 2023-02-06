@@ -72,6 +72,14 @@ module.exports = class ProductsController {
         });
     }
 
+    let patrimonyByBarCode = patrimonySchema.find({
+      barCode: { $regex: req.query.filter, $options: "i" },
+    });
+
+    if(patrimonyByBarCode){
+      return res.status(422).json({ message: "Código de barras ja cadastrado" });
+    }
+
     if (updatedAt) {
       return res
         .status(422)

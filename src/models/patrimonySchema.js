@@ -5,6 +5,7 @@ const patrimonySchema = new mongoose.model('Patrimony',{
     priceCost: Number,
     description: String,
     category: String,
+    patrimonyNumber: Number,
     imageBase64: String,
     moveStock: Number,
     realStock: Number,

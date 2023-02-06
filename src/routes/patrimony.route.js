@@ -8,8 +8,7 @@ patrimonyRouter.put("/patrimony/:id", verifyToken, patrimonyController.updatePat
 patrimonyRouter.delete(
   "/patrimony/:id",
   verifyToken,
-  () => 
-  patrimonyController.deletePatrimony
+  patrimonyController.deletepatrimony
 );
 
 function verifyToken(req, res, next) {
