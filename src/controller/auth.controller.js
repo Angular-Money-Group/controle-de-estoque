@@ -99,10 +99,10 @@ module.exports = class AuthController {
   }
 
   static async forgotPassword(req, res) {
-    if (!req.query.email)
+    if (!req.body.email)
       return res.status(422).json({ message: "Email é obrigatório" });
     try {
-      const user = await userSchema.findOne({ email: req.query.email });
+      const user = await userSchema.findOne({ email: req.body.email });
 
       if (!user)
         return res
