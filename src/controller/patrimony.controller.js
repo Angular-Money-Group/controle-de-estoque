@@ -9,53 +9,54 @@ module.exports = class PatrimonyController {
   }
 
   static async createPatrimony(req, res) {
-    let { 
-      name, priceCost, description, category, initialStock } =
-      req.body;
-
-    if (!name) {
-      return res.status(422).json({ message: "Nome é obrigatorio" });
-    }
-
-    if (!priceCost) {
-      return res.status(422).json({ message: "Preço de custo é obrigatorio" });
-    }
-
-    if (!category) {
-      return res.status(422).json({ message: "Categoria é obrigatorio" });
-    }
-
-    // Add createdAt and stock
-    let realStock = initialStock;
-    let createdAt = new Date(Date.now());
-
-    const patrimony = new patrimonySchema({
-      name,
-      priceCost,
-      description,
-      category,
-      initialStock,
-      realStock,
-      createdAt,
-    });
-
     try {
+      let { name, priceCost, description, category, initialStock } = req.body;
+
+      if (!name) {
+        return res.status(422).json({ message: "Nome é obrigatorio" });
+      }
+
+      if (!priceCost) {
+        return res
+          .status(422)
+          .json({ message: "Preço de custo é obrigatorio" });
+      }
+
+      if (!category) {
+        return res.status(422).json({ message: "Categoria é obrigatorio" });
+      }
+
+      // Add createdAt and stock
+      let realStock = initialStock;
+      let createdAt = new Date(Date.now());
+
+      const patrimony = new patrimonySchema({
+        name,
+        priceCost,
+        description,
+        category,
+        initialStock,
+        realStock,
+        createdAt,
+      });
+
       await patrimony.save();
       return res
         .status(200)
         .json({ message: "Produto cadastrado com sucesso!", user: patrimony });
     } catch (err) {
       console.log(err);
-      return res
-        .status(500)
-        .json({
-          message: "Erro Interno do servidor, tente novamente mais tarde",
-        });
+      return res.status(500).json({
+        message: "Erro Interno do servidor, tente novamente mais tarde",
+      });
     }
   }
 
   static async updatePatrimony(req, res) {
-    const { name, priceCost, description, category, realStock, moveStock } = req.body;
+    try {
+
+    const { name, priceCost, description, category, realStock, moveStock } =
+      req.body;
     const { id } = req.params;
 
     if (!id) {
@@ -81,9 +82,17 @@ module.exports = class PatrimonyController {
     return res
       .status(200)
       .json({ message: "Produto editado com sucesso", data: product });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        message: "Erro Interno do servidor, tente novamente mais tarde",
+      });
+    }
   }
 
   static async deletepatrimony(req, res) {
+    try{
+
     const { id } = req.params;
 
     const patrimony = await patrimonySchema.findById(id);
@@ -95,5 +104,12 @@ module.exports = class PatrimonyController {
 
       return res.status(200).json({ message: "Produto excluido com sucesso" });
     }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Erro Interno do servidor, tente novamente mais tarde",
+    });
+  }
+
   }
 };
