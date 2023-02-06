@@ -28,7 +28,7 @@ module.exports = class ProductsController {
       let product = await productsSchema.find();
       return res
         .status(200)
-        .json({ message: "Operação realizada com sucesso", data: product });
+        .json({ message: "Operação realizada com sucesso", data: product, totalItens: product.length });
     }
   }
 
