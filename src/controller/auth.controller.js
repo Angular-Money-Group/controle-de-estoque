@@ -32,17 +32,11 @@ module.exports = class AuthController {
       return res.status(422).json({ message: "Senha invalida" });
     }
 
-      const secret = process.env.SECRET;
+      const token = jwt.sign({ id: user.id, role: user.role }, process.env.SECRET, {
+        expiresIn: "1d",
+      });
 
-      const token = jwt.sign(
-        {
-          id: user._id,
-        },
-        secret
-      );
-      res
-        .status(200)
-        .json({ message: "Autenticação realizada com sucesso!", token: token });
+      return res.status(200).json({ message: "Autenticação realizada com sucesso!", token: token });
     } catch (err) {
       console.log(err);
       return res
