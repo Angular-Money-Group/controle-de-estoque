@@ -20,6 +20,7 @@ module.exports = class PatrimonyController {
           .json({
             message: "Operação realizada com sucesso",
             data: allpatrimony,
+            totalItens: allpatrimony.length,
           });
       } catch (err) {
         return res.status(400).json({ message: "Erro ao consultar", err });

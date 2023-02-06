@@ -19,6 +19,7 @@ module.exports = class ProductsController {
           .json({
             message: "Operação realizada com sucesso",
             data: allProducts,
+            totalItens: allProducts.length,
           });
       } catch (err) {
         return res.status(400).json({ message: "Erro ao consultar", err });
