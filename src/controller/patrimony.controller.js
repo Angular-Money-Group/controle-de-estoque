@@ -9,7 +9,8 @@ module.exports = class PatrimonyController {
   }
 
   static async createPatrimony(req, res) {
-    let { name, priceCost, description, category, initialStock } =
+    let { 
+      name, priceCost, description, category, initialStock } =
       req.body;
 
     if (!name) {
@@ -25,20 +26,17 @@ module.exports = class PatrimonyController {
     }
 
     // Add createdAt and stock
-    var realStock = initialStock;
-    var createdAt = new Date(Date.now());
+    let realStock = initialStock;
+    let createdAt = new Date(Date.now());
 
     const patrimony = new patrimonySchema({
       name,
       priceCost,
       description,
       category,
-      imageBase64,
       initialStock,
-      moveStock,
       realStock,
       createdAt,
-      updatedAt,
     });
 
     try {
