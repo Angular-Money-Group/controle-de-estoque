@@ -291,7 +291,42 @@ module.exports = {
             example: "Venda realizada com sucesso", // example of a completed value
           },
         },
-      }
+      },
+      genericError: {
+        type: "object", // data type
+        properties: {
+          message: {
+            type: "string", // data type
+            description: "Mensagem de erro", // desc
+            example: "Generic Error", // example of a completed value
+          },
+        },
+      },
+      refreshTokenRequest: {
+        type: "object", // data type
+        properties: {
+          refreshToken: {
+            type: "string", // data type
+            description: "Refresh token", // desc
+            example: "qieljrghsdilurghbosdiruvbdfs", // example of a completed value
+          },
+        },
+      },
+      refreshTokenResponse: {
+        type: "object", // data type
+        properties: {
+          message: {
+            type: "string", // data type
+            description: "Mensagem de sucesso", // desc
+            example: "Refresh realizado com sucesso", // example of a completed value
+          },
+          accessToken: {
+            type: "string", // data type
+            description: "auth token", // desc
+            example: "qieljrghsdilurghbosdiruvbdfs", // example of a completed value
+          },
+        },
+      },
     },
   },
 };

@@ -2,6 +2,7 @@ const login = require('./login');
 const register = require('./register');
 const forgotPassword = require('./forgotPassword');
 const resetPassword = require('./resetPassword');
+const refreshToken = require('./refreshToken');
 
 module.exports = {
     paths:{
@@ -16,6 +17,9 @@ module.exports = {
         },
         '/auth/v1/resetPassword/{userId}/{token}':{
             ...resetPassword,
+        },
+        '/auth/v1/refreshToken':{
+            ...refreshToken,
         }
     }
 }

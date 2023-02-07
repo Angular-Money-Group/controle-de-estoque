@@ -32,16 +32,44 @@ module.exports = class AuthController {
       return res.status(422).json({ message: "Senha invalida" });
     }
 
-      const token = jwt.sign({ id: user.id, role: user.role }, process.env.SECRET, {
-        expiresIn: "1d",
-      });
+    const accessToken = jwt.sign({ email, id: user.id, role: user.role }, process.env.SECRET, {
+      expiresIn: '15m'
+    });
+  
+    // Generate refresh token
+    const refreshToken = jwt.sign({ email, id: user.id, role: user.role }, process.env.SECRET, {
+      expiresIn: '7d'
+    });
 
-      return res.status(200).json({ message: "Autenticação realizada com sucesso!", token: token });
+      return res.status(200).json({ message: "Autenticação realizada com sucesso!", accessToken, refreshToken });
     } catch (err) {
       console.log(err);
       return res
         .status(500)
         .json({ message: "Erro Interno do servidor, tente novamente mais tarde" });
+    }
+  }
+
+  static async refreshToken(req, res) {
+    const { refreshToken } = req.body;
+
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.SECRET);
+  
+      // Check if refresh token exists in database
+      const user = await userSchema.findOne({ email: decoded.email });
+      
+      if (!user) {
+        return res.status(401).json({ message: 'Invalid refresh token' });
+      }
+      // Generate new access token
+      const accessToken = jwt.sign({ email: decoded.email, id: user.id, role: user.role }, process.env.SECRET, {
+        expiresIn: '15m'
+      });
+  
+      res.json({ message: "Refresh realizado com sucesso", accessToken });
+    } catch (error) {
+      res.status(401).json({ message: 'Invalid refresh token' });
     }
   }
 
