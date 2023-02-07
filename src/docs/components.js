@@ -327,6 +327,41 @@ module.exports = {
           },
         },
       },
+      authLoginRequest: {
+        type: "object", // data type
+        properties: {
+          email: {
+            type: "string", // data type
+            description: "Email do usuário", // desc
+            example: "[...]", // example of a completed value
+          },
+          password: {
+            type: "string", // data type
+            description: "Senha do usuário", // desc
+            example: "[...]", // example of a completed value
+          },
+        },
+      },
+      authLoginResponse: {
+        type: "object", // data type
+        properties: {
+          message: {
+            type: "string", // data type
+            description: "Mensagem de sucesso", // desc
+            example: "Login realizado com sucesso", // example of a completed value
+          },
+          accessToken: {
+            type: "string", // data type
+            description: "auth token", // desc
+            example: "qieljrghsdilurghbosdiruvbdfs", // example of a completed value
+          },
+          refreshToken: {
+            type: "string", // data type
+            description: "auth token", // desc
+            example: "qieljrghsdilurghbosdiruvbdfs", // example of a completed value
+          },
+        },
+      }
     },
   },
 };
