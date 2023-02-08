@@ -67,9 +67,9 @@ module.exports = class AuthController {
         expiresIn: '15m'
       });
   
-      res.json({ message: "Refresh realizado com sucesso", accessToken });
+      return res.json({ message: "Refresh realizado com sucesso", accessToken });
     } catch (error) {
-      res.status(401).json({ message: 'Invalid refresh token' });
+      return res.status(401).json({ message: 'Invalid refresh token' });
     }
   }
 
