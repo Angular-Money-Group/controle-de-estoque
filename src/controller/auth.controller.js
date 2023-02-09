@@ -38,7 +38,7 @@ module.exports = class AuthController {
   
     // Generate refresh token
     const refreshToken = jwt.sign({ email, id: user.id, role: user.role }, process.env.SECRET, {
-      expiresIn: '15m'
+      expiresIn: '7d'
     });
 
       return res.status(200).json({ message: "Autenticação realizada com sucesso!", accessToken, refreshToken });
@@ -64,7 +64,7 @@ module.exports = class AuthController {
       }
       // Generate new access token
       const accessToken = jwt.sign({ email: decoded.email, id: user.id, role: user.role }, process.env.SECRET, {
-        expiresIn: '7d'
+        expiresIn: '1m'
       });
   
       return res.json({ message: "Refresh realizado com sucesso", accessToken });
