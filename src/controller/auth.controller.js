@@ -32,12 +32,12 @@ module.exports = class AuthController {
       return res.status(422).json({ message: "Senha invalida" });
     }
 
-    const accessToken = jwt.sign({ email, id: user.id, role: user.role }, process.env.SECRET, {
-      expiresIn: '1m'
+    const accessToken = jwt.sign({ email, id: user.id, role: user.role, accessLevel: 'accessToken' }, process.env.SECRET, {
+      expiresIn: '15m'
     });
   
     // Generate refresh token
-    const refreshToken = jwt.sign({ email, id: user.id, role: user.role }, process.env.SECRET, {
+    const refreshToken = jwt.sign({ email, id: user.id, role: user.role, accessLevel: 'refreshToken' }, process.env.SECRET, {
       expiresIn: '7d'
     });
 
