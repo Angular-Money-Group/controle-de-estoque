@@ -26,10 +26,10 @@ module.exports = class PatrimonyController {
         return res.status(400).json({ message: "Erro ao consultar", err });
       }
     } else {
-      let product = await productsSchema.find();
+      let patrimony = await patrimonySchema.find();
       return res
         .status(200)
-        .json({ message: "Operação realizada com sucesso", data: product, totalItens: product.length });
+        .json({ message: "Operação realizada com sucesso", data: patrimony, totalItens: patrimony.length });
     }
   }
 
@@ -129,7 +129,7 @@ module.exports = class PatrimonyController {
 
       return res
         .status(200)
-        .json({ message: "Produto editado com sucesso", data: product });
+        .json({ message: "Produto editado com sucesso", data: patrimony });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
