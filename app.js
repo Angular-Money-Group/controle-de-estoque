@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const port = 3000;
+const port = 3001;
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -32,7 +32,7 @@ mongoose
   .connect(
     `mongodb+srv://${dbUser}:${dbPassword}@cluster.rhhrs5n.mongodb.net/?retryWrites=true&w=majority`
   )
-  .then(() => console.log("Conectado com sucesso"))
+  .then(() => console.log("Conectado com sucesso ao banco de DEV"))
   .catch((err) => console.log(err));
 
 //Routes
@@ -41,5 +41,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, function () {
-  console.log('CORS-enabled web server listening on port 80')
+  console.log('Running')
 })

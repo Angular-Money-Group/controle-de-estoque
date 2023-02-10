@@ -3,33 +3,37 @@ const patrimonySchema = require("../models/patrimonySchema");
 module.exports = class PatrimonyController {
   static async getPatrimony(req, res) {
     if (req.query.filter) {
+      let filter = req.query.filter;
+      let allpatrimony = [];
       try {
-        let patrimonyByName = await patrimonySchema.find({
-          name: { $regex: req.query.filter, $options: "i" },
-        });
-        let patrimonyByPatrimonyNumber = await patrimonySchema.find({
-          patrimonyNumber: { $regex: req.query.filter, $options: "i" },
-        });
-
-        let allpatrimony = [
-          ...new Set([...patrimonyByPatrimonyNumber, ...patrimonyByName]),
-        ];
-
-        return res
-          .status(200)
-          .json({
-            message: "Operação realizada com sucesso",
-            data: allpatrimony,
-            totalItens: allpatrimony.length,
+        if (isNaN(filter)) {
+          var patrimonyByName = await patrimonySchema.find({
+            name: { $regex: filter, $options: "i" },
           });
+          allpatrimony = [...patrimonyByName];
+        } else {
+          const productByPatrimonyNumber = await patrimonySchema.find();
+
+          allpatrimony = productByPatrimonyNumber.filter((patrimony) => {
+            return String(patrimony.patrimonyNumber).indexOf(filter) > -1;
+          });
+        }
+
+        return res.status(200).json({
+          message: "Operação realizada com sucesso",
+          data: allpatrimony,
+          totalItens: allpatrimony.length,
+        });
       } catch (err) {
         return res.status(400).json({ message: "Erro ao consultar", err });
       }
     } else {
       let patrimony = await patrimonySchema.find();
-      return res
-        .status(200)
-        .json({ message: "Operação realizada com sucesso", data: patrimony, totalItens: patrimony.length });
+      return res.status(200).json({
+        message: "Operação realizada com sucesso",
+        data: patrimony,
+        totalItens: patrimony.length,
+      });
     }
   }
 
@@ -44,12 +48,14 @@ module.exports = class PatrimonyController {
         initialStock,
       } = req.body;
 
-      let patrimonyByPatrimonyNumber = patrimonySchema.find({
-        patrimonyNumber: { $regex: req.query.filter, $options: "i" },
+      let patrimonyByPatrimonyNumber = await patrimonySchema.findOne({
+        patrimonyNumber: patrimonyNumber,
       });
 
-      if(patrimonyByPatrimonyNumber){
-        return res.status(422).json({ message: "Numero de patrimonio ja cadastrado" });
+      if (patrimonyByPatrimonyNumber) {
+        return res
+          .status(422)
+          .json({ message: "Numero de patrimonio ja cadastrado" });
       }
 
       if (!name) {
