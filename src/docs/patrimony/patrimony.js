@@ -48,7 +48,7 @@ module.exports = {
       content: {
         "application/json": {
           schema: {
-            $ref: "#/components/schemas/createProductRequest", // id model
+            $ref: "#/components/schemas/createPatrimonyRequest", // id model
           },
         },
       },

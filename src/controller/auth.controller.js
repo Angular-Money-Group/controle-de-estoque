@@ -33,7 +33,7 @@ module.exports = class AuthController {
     }
 
     const accessToken = jwt.sign({ email, id: user.id, role: user.role, accessLevel: 'accessToken' }, process.env.SECRET, {
-      expiresIn: '15m'
+      expiresIn: '45m'
     });
   
     // Generate refresh token

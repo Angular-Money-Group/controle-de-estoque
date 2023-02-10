@@ -143,6 +143,46 @@ module.exports = {
           },
         },
       },
+      createProductRequest: {
+        type: "object", // data type
+        properties: {
+          name: {
+            type: "string", // data type
+            description: "Nome do produto", // desc
+            example: "Bolacha Nikito Recheada", // example of a completed value
+          },
+          priceCost: {
+            type: "number", // data type
+            description: "Preço de custo do produto", // desc
+            example: 1.5, // example of a completed value
+          },
+          priceSell: {
+            type: "number", // data type
+            description: "Preço de venda do produto", // desc
+            example: 2.5, // example of a completed value
+          },
+          description: {
+            type: "string", // data type
+            description: "Descrição do produto", // desc
+            example: "Bolacha Nikito Recheada", // example of a completed value
+          },
+          patrimonyNumber: {
+            type: "string", // data type
+            description: "Numero de patrimonio", // desc
+            example: 1, // example of a completed value
+          },
+          category: {
+            type: "string", // data type
+            description: "Categoria do produto", // desc
+            example: "Bolachas", // example of a completed value
+          },
+          initialStock: {
+            type: "number", // data type
+            description: "Estoque inicial do produto", // desc
+            example: 100, // example of a completed value
+          },
+        },
+      },
 
       // update todo model
       updateProductRequest: {
