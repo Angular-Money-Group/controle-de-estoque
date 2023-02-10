@@ -116,6 +116,16 @@ module.exports = class PatrimonyController {
         return res.status(422).json({ message: "ID não informado" });
       }
 
+      let patrimonyByPatrimonyNumber = await patrimonySchema.findOne({
+        patrimonyNumber: patrimonyNumber,
+      });
+
+      if (patrimonyByPatrimonyNumber) {
+        return res
+          .status(422)
+          .json({ message: "Numero de patrimonio ja cadastrado" });
+      }
+
       const patrimony = await patrimonySchema.findById(id);
 
       if (!patrimony) {
