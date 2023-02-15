@@ -52,7 +52,7 @@ module.exports = class PatrimonyController {
         patrimonyNumber: patrimonyNumber,
       });
 
-      if (patrimonyByPatrimonyNumber) {
+      if (patrimonyByPatrimonyNumber.length > 0) {
         return res
           .status(422)
           .json({ message: "Numero de patrimonio ja cadastrado" });
