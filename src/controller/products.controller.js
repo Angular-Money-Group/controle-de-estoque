@@ -63,8 +63,6 @@ module.exports = class ProductsController {
         realStock,
       } = req.body;
 
-
-
         let productsByBarCode = await productsSchema.find({
           barCode: { $regex: barCode, $options: "i" },
         });
@@ -148,17 +146,7 @@ module.exports = class ProductsController {
         moveStock } =
         req.body;
       const { id } = req.params;
-
-      let productsByBarCode = await productsSchema.find({
-        barCode: { $regex: barCode, $options: "i" },
-      });
       
-      if (productsByBarCode.length > 0) {
-        return res.status(422).json({
-          message: "Já existe um produto com esse codigo de barras",
-        });
-      }
-
       if (!id) {
         return res.status(422).json({ message: "ID não informado" });
       }
@@ -168,11 +156,26 @@ module.exports = class ProductsController {
           .status(422)
           .json({ message: "Movimento de estoque não informado" });
       }
-
+      
       const product = await productsSchema.findById(id);
 
       if (!product) {
         return res.status(404).json({ message: "Produto não encontrado" });
+      }
+
+      
+      if(product.barCode !== barCode) {
+        let productsByBarCode = await productsSchema.find({
+          barCode: { $regex: barCode, $options: "i" },
+        });
+        
+        if (productsByBarCode.length > 0) {
+          return res.status(422).json({
+            message: "Já existe um produto com esse codigo de barras",
+          });
+        }
+
+        product.barCode = barCode
       }
 
       product.name = name;
@@ -182,7 +185,6 @@ module.exports = class ProductsController {
       product.category = category;
       product.moveStock = moveStock;
       product.realStock += moveStock;
-      product.barCode = barCode;
       product.updatedAt = Date.now();
 
       await product.save();
