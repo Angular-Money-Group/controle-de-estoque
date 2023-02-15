@@ -7,7 +7,7 @@ module.exports = class PatrimonyController {
       let allpatrimony = [];
       try {
         if (isNaN(filter)) {
-          var patrimonyByName = await patrimonySchema.find({
+          let patrimonyByName = await patrimonySchema.find({
             name: { $regex: filter, $options: "i" },
           });
           allpatrimony = [...patrimonyByName];
@@ -116,27 +116,30 @@ module.exports = class PatrimonyController {
         return res.status(422).json({ message: "ID não informado" });
       }
 
-      let patrimonyByPatrimonyNumber = await patrimonySchema.findOne({
-        patrimonyNumber: patrimonyNumber,
-      });
-
-      if (patrimonyByPatrimonyNumber) {
-        return res
-          .status(422)
-          .json({ message: "Numero de patrimonio ja cadastrado" });
-      }
-
       const patrimony = await patrimonySchema.findById(id);
 
       if (!patrimony) {
         return res.status(404).json({ message: "Patrimonio não encontrado" });
       }
 
+      if (patrimony.patrimonyNumber !== patrimonyNumber) {
+        let productsByBarCode = await patrimonySchema.find({
+          barCode: { $regex: patrimonyNumber, $options: "i" },
+        });
+
+        if (productsByBarCode.length > 0) {
+          return res.status(422).json({
+            message: "Já existe um produto com esse codigo de patrimônio",
+          });
+        }
+
+        patrimony.patrimonyNumber = patrimonyNumber;
+      }
+
       patrimony.name = name;
       patrimony.priceCost = priceCost;
       patrimony.description = description;
       patrimony.category = category;
-      patrimony.patrimonyNumber = patrimonyNumber;
       patrimony.moveStock = moveStock;
       patrimony.realStock = realStock;
       patrimony.updatedAt = new Date(Date.now());
