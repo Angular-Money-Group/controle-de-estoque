@@ -61,28 +61,19 @@ module.exports = class ProductsController {
         initialStock,
         moveStock,
         realStock,
-        createdAt,
-        updatedAt,
       } = req.body;
 
 
 
-      let productsByBarCode = await productsSchema.find({
-        barCode: { $regex: barCode, $options: "i" },
-      });
-
-      if (productsByBarCode.length > 0) {
-        return res.status(422).json({
-          message: "Já existe um produto com esse codigo de barras",
+        let productsByBarCode = await productsSchema.find({
+          barCode: { $regex: barCode, $options: "i" },
         });
-      }
-
-      if (updatedAt) {
-        return res.status(422).json({
-          message:
-            "Não é permitido enviar a data de atualização, ela será automatica!",
-        });
-      }
+        
+        if (productsByBarCode.length > 0) {
+          return res.status(422).json({
+            message: "Já existe um produto com esse codigo de barras",
+          });
+        }
 
       if (!name) {
         return res.status(422).json({ message: "Nome é obrigatorio" });
@@ -118,7 +109,7 @@ module.exports = class ProductsController {
 
       // Add createdAt and stock
       realStock = initialStock;
-      createdAt = new Date(Date.now());
+      const createdAt = new Date(Date.now());
 
       const product = new productsSchema({
         name,
@@ -127,12 +118,11 @@ module.exports = class ProductsController {
         barCode,
         description,
         category,
-        imageBase64,
+        imageBase64,  
         initialStock,
         moveStock,
         realStock,
         createdAt,
-        updatedAt,
       });
 
       await product.save();
@@ -149,9 +139,25 @@ module.exports = class ProductsController {
 
   static async updateProduct(req, res) {
     try {
-      const { name, priceCost, priceSell, description, category, moveStock } =
+      const { name,
+        priceCost,
+        priceSell,
+        barCode,
+        description,
+        category,
+        moveStock } =
         req.body;
       const { id } = req.params;
+
+      let productsByBarCode = await productsSchema.find({
+        barCode: { $regex: barCode, $options: "i" },
+      });
+      
+      if (productsByBarCode.length > 0) {
+        return res.status(422).json({
+          message: "Já existe um produto com esse codigo de barras",
+        });
+      }
 
       if (!id) {
         return res.status(422).json({ message: "ID não informado" });
@@ -176,6 +182,7 @@ module.exports = class ProductsController {
       product.category = category;
       product.moveStock = moveStock;
       product.realStock += moveStock;
+      product.barCode = barCode;
       product.updatedAt = Date.now();
 
       await product.save();

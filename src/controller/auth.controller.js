@@ -64,7 +64,7 @@ module.exports = class AuthController {
       }
       // Generate new access token
       const accessToken = jwt.sign({ email: decoded.email, id: user.id, role: user.role }, process.env.SECRET, {
-        expiresIn: '1m'
+        expiresIn: '45m'
       });
   
       return res.json({ message: "Refresh realizado com sucesso", accessToken });
