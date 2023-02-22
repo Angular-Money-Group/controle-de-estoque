@@ -41,6 +41,12 @@ module.exports = class AuthController {
       expiresIn: '7d'
     });
 
+    user.logs.push({
+      action: 'Login',
+      date: new Date(),
+      description: 'Usuário logou no sistema'
+    })
+
       return res.status(200).json({ message: "Autenticação realizada com sucesso!", accessToken, refreshToken });
     } catch (err) {
       console.log(err);
@@ -91,13 +97,14 @@ module.exports = class AuthController {
     if (userExists) {
       return res
         .status(422)
-        .json({ message: "Email já cadastrado! Utilize outro email" });
+        .json({ message: "Não foi possivel autenticar o Usuário" });
     }
 
     // Crate Password
     const salt = await bcrypt.genSalt(12);
     const passHash = await bcrypt.hash(password, salt);
 
+    try {
     //Create User
     const user = new userSchema({
       name,
@@ -105,7 +112,6 @@ module.exports = class AuthController {
       role,
       password: passHash,
     });
-    try {
       await user.save();
       res.status(201).json({ message: "Usuario Criado com sucesso!" });
     } catch (err) {
@@ -114,10 +120,6 @@ module.exports = class AuthController {
         .status(500)
         .json({ message: "Erro Interno do servidor, tente novamente mais tarde" });
     }
-
-    return res
-      .status(500)
-      .json({ message: "Erro Interno do servidor, tente novamente mais tarde" });
   }
 
   static async forgotPassword(req, res) {

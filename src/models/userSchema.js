@@ -12,7 +12,12 @@ const userSchema = new mongoose.model('User',{
     },
     passwordResetExpires: {
         type: Date
-    }
+    },
+    logs: [{
+        action: String,
+        date: Date,
+        description: String
+    }]
 })
 
 module.exports = userSchema;

@@ -10,6 +10,8 @@ const patrimonySchema = new mongoose.model('Patrimony',{
     moveStock: Number,
     realStock: Number,
     initialStock: Number,
+    isActive: Boolean,
+    observation: String,
     createdAt: Date,
     updatedAt: Date,
 })

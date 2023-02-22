@@ -150,12 +150,6 @@ module.exports = class ProductsController {
       if (!id) {
         return res.status(422).json({ message: "ID não informado" });
       }
-
-      if (!moveStock) {
-        return res
-          .status(422)
-          .json({ message: "Movimento de estoque não informado" });
-      }
       
       const product = await productsSchema.findById(id);
 

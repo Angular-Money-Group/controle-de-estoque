@@ -1,4 +1,0 @@
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/ghabryel2208/repositories/crud-api
-    - /bin/cp -r * $DEPLOYPATH
