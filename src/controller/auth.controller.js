@@ -21,7 +21,7 @@ module.exports = class AuthController {
     const user = await userSchema.findOne({ email: email });
 
     if (!user) {
-      return res.status(400).json({ message: "Usuario não encontrado" });
+      return res.status(400).json({ message: "Não foi possivel autenticar o Usuário" });
     }
 
     try {
@@ -29,7 +29,7 @@ module.exports = class AuthController {
     const checkPassword = await bcrypt.compare(password, user.password);
 
     if (!checkPassword) {
-      return res.status(422).json({ message: "Senha invalida" });
+      return res.status(422).json({ message: "Não foi possivel autenticar o Usuário" });
     }
 
     const accessToken = jwt.sign({ email, id: user.id, role: user.role, accessLevel: 'accessToken' }, process.env.SECRET, {

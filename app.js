@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const port = 3000 || process.env.PORT;
+const port = 3001
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -30,7 +30,7 @@ app.use(pdvRouter);
 // Connect to MongoDB
 mongoose
   .connect(
-    `mongodb+srv://${dbUser}:${dbPassword}@cluster-prd.g5g2du8.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://${dbUser}:${dbPassword}@cluster.rhhrs5n.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(() => console.log("Conectado com sucesso ao banco de DEV"))
   .catch((err) => console.log(err));
