@@ -102,13 +102,8 @@ module.exports = class PatrimonyController {
   static async updatePatrimony(req, res) {
     try {
       const {
-        name,
-        priceCost,
-        description,
-        category,
-        realStock,
-        patrimonyNumber,
-        moveStock,
+        isActive,
+        observation
       } = req.body;
       const { id } = req.params;
 
@@ -136,12 +131,8 @@ module.exports = class PatrimonyController {
         patrimony.patrimonyNumber = patrimonyNumber;
       }
 
-      patrimony.name = name;
-      patrimony.priceCost = priceCost;
-      patrimony.description = description;
-      patrimony.category = category;
-      patrimony.moveStock = moveStock;
-      patrimony.realStock = realStock;
+      patrimony.isActive = isActive;
+      patrimony.observation = observation;
       patrimony.updatedAt = new Date(Date.now());
 
       await patrimony.save();
