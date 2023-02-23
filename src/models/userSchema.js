@@ -15,6 +15,7 @@ const userSchema = new mongoose.model('User',{
     },
     logs: [{
         action: String,
+        action: String,
         date: Date,
         description: String
     }]

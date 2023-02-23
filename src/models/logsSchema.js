@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const logsSchema = mongoose.model("Logs", {
-    action: String,
     user: String,
+    action: String,
     date: Date,
     description: String,
 });

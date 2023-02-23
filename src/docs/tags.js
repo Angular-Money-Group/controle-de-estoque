@@ -12,5 +12,8 @@ module.exports = {
       {
         name: "PDV", // name of a tag
       },
+      {
+        name: "Caixas", // name of a tag
+      },
     ],
   };

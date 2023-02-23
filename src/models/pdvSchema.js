@@ -1,10 +1,17 @@
 const mongoose = require("mongoose");
 
 const PDVSchema = new mongoose.model('PDV', {
-    userID: String,
-    products: [{ productID: String, quantity: Number}],
+    user: String,
+    products: [{ productID: String, quantity: Number, price: Number, total: Number }],
     totalSell: Number,
     state: String,
+    paymentMethods: [
+        {
+            method: String,
+            value: Number,
+        }
+    ],
+    discount: Number,
     createdAt: Date,
 })
 

@@ -300,11 +300,6 @@ module.exports = {
       createPDVRequest: {
         type: "object", // data type
         properties: {
-          userID: {
-            type: "string", // data type
-            description: "ID do usuário", // desc
-            example: "60e1c5b0b0b5a40015b5b0a1", // example of a completed value
-          },
           products: {
             type: "array", // data type
             description: "Produtos do PDV", // desc
@@ -320,6 +315,11 @@ module.exports = {
             description: "Total da venda", // desc
             example: 10, // example of a completed value
           },
+          cpfClient: {
+            type: "string", // data type
+            description: "CPF do cliente", // desc
+            example: "12345678910", // example of a completed value
+          },
         },
       },
       genericResponse: {
@@ -328,7 +328,7 @@ module.exports = {
           message: {
             type: "string", // data type
             description: "Mensagem de sucesso", // desc
-            example: "Venda realizada com sucesso", // example of a completed value
+            example: "Operação Realizada com sucesso", // example of a completed value
           },
         },
       },
@@ -401,7 +401,22 @@ module.exports = {
             example: "qieljrghsdilurghbosdiruvbdfs", // example of a completed value
           },
         },
-      }
+      },
+      updatePatrimonyRequest: {
+        type: "object", // data type
+        properties: {
+          isActive: {
+            type: "boolean", // data type
+            description: "Status do patrimônio", // desc
+            example: true, // example of a completed value
+          },
+          observation: {
+            type: "string", // data type
+            description: "Descrição do patrimônio", // desc
+            example: "Patrimônio 1", // example of a completed value
+          },
+        },
+      },
     },
   },
 };

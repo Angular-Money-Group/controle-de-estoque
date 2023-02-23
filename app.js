@@ -14,6 +14,7 @@ const productsRouter = require("./src/routes/products.route");
 const authRouter = require("./src/routes/auth.route");
 const patrimonyRouter = require("./src/routes/patrimony.route");
 const pdvRouter = require("./src/routes/pdv.route");
+const cashiersRouter = require("./src/routes/cashiers.route");
 
 const docs = require("./src/docs");
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(docs));
 
+app.use(cashiersRouter)
 app.use(patrimonyRouter);
 app.use(productsRouter);
 app.use(authRouter);
