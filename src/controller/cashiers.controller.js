@@ -90,7 +90,6 @@ module.exports = class CashiersController {
     }
 
     cashier.state = "Fechado";
-
     cashier.history.push({
       user: user.name,
       operation: "Fechamento",
