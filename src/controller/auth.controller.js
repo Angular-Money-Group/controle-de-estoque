@@ -32,7 +32,7 @@ module.exports = class AuthController {
       return res.status(422).json({ message: "Não foi possivel autenticar o Usuário" });
     }
 
-    const accessToken = jwt.sign({ email, id: user.id, role: user.role, accessLevel: 'accessToken' }, process.env.SECRET, {
+    const accessToken = jwt.sign({ email, id: user.id, name: user.name, role: user.role, accessLevel: 'accessToken' }, process.env.SECRET, {
       expiresIn: '45m'
     });
   
