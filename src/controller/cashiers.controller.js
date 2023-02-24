@@ -23,7 +23,6 @@ module.exports = class CashiersController {
 
     const cashier = await cashiersSchema.findOne({ name });
 
-
     if (!cashier) {
       const newCashier = new cashiersSchema({
         name,
@@ -53,6 +52,11 @@ module.exports = class CashiersController {
         return res.status(400).json({ message: "Erro ao criar caixa", err });
       }
     } else {
+
+      if(cashier.state === "Aberto"){
+        return res.status(400).json({ message: "Caixa já está aberto" });
+      }
+
       cashier.state = "Aberto";
       cashier.totalCash = totalCash;
 
