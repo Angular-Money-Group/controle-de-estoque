@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 
 const clientsSchema = mongoose.model("Clients", {
     name: String,
-    cpf: String,
+    cpfcnpj: String,
     email: String,
     phone: String,
     address: String,

@@ -20,9 +20,9 @@ module.exports = class PDVController {
   }
 
   static async createPDV(req, res) {
-    const { products, totalSell, cpfClient } = req.body;
-    const bearer = req.headers["authorization"].split(" ")[1];
+    const { products, totalSell, cpfcnpjClient } = req.body;
 
+    const bearer = req.headers["authorization"].split(" ")[1];
     const userID = jwt.verify(bearer, process.env.SECRET);
     const user = await usersSchema.findById(userID);
 
@@ -30,12 +30,12 @@ module.exports = class PDVController {
       return res.status(422).json({ message: "Dados não informados" });
     }
 
-    const isClient = clientsSchema.findOne({ cpf: cpfClient });
+    const isClient = clientsSchema.findOne({ cpf: cpfcnpjClient });
 
     if (!isClient) {
       const newClient = new clientsSchema({
         name: "",
-        cpf: cpfClient,
+        cpfcnpj: cpfcnpjClient,
         email: "",
         phone: "",
         address: "",
@@ -47,7 +47,7 @@ module.exports = class PDVController {
 
     const newPDV = new PDVSchema({
       user: user.name,
-      cpfClient,
+      cpfcnpjClient,
       products,
       totalSell,
       state: "Aberto",
@@ -67,7 +67,7 @@ module.exports = class PDVController {
     const { paymentMethods, cashierID } = req.body;
     const user = await usersSchema.findById(jwt.verify(req.headers["authorization"].split(" ")[1], process.env.SECRET));
     const pdv = await PDVSchema.findById(id);
-    const client = await clientsSchema.findOne({ cpf: pdv.cpfClient });
+    const client = await clientsSchema.findOne({ cpfcnpj: pdv.cpfcnpjClient });
 
     if (!user) {
       throw console.error("Usuário não encontrado");
