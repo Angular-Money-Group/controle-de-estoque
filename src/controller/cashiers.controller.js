@@ -17,6 +17,8 @@ module.exports = class CashiersController {
       jwt.verify(req.headers["authorization"].split(" ")[1] , process.env.SECRET).id)
     ;
 
+    console.log(req.connection)
+
     if (!name) {
       return res.status(422).json({ message: "Dados não informados" });
     }
@@ -48,7 +50,7 @@ module.exports = class CashiersController {
         });
 
         await newCashier.save();
-        return res.status(201).json({ message: "Caixa criado com sucesso" });
+        return res.status(201).json({ message: "Caixa criado com sucesso", data: {cashierId: newCashier.id, totalCash: newCashier.totalCash} });
       } catch (err) {
         return res.status(400).json({ message: "Erro ao criar caixa", err });
       }
@@ -80,7 +82,7 @@ module.exports = class CashiersController {
           description: `O usuário ${user.name} abriu o caixa ${name} com o valor de ${totalCash}`,
         });
         await cashier.save();
-        return res.status(200).json({ message: "Caixa aberto com sucesso" });
+        return res.status(200).json({ message: "Caixa aberto com sucesso", data: {cashierId: cashier.id, totalCash: cashier.totalCash} });
       } catch (err) {
         return res.status(400).json({ message: "Erro ao abrir caixa", err });
       }
@@ -99,7 +101,8 @@ module.exports = class CashiersController {
       return res.status(422).json({ message: "Dados não informados" });
     }
 
-    cashier.state = "Fechado";
+    cashier.stateCashier = { state: "Fechado", ip: null }
+    
     cashier.history.push({
       user: user.name,
       operation: "Fechamento",
