@@ -2,6 +2,7 @@ const cashiersSchema = require("../models/cashiersSchema");
 const PDVSchema = require("../models/pdvSchema");
 const userSchema = require("../models/userSchema");
 const addLogs = require("../utils/addLogs");
+const jwt = require("jsonwebtoken");
 
 module.exports = class CashiersController {
   static async getCashiers(req, res) {
@@ -11,15 +12,17 @@ module.exports = class CashiersController {
 
   static async openCashier(req, res) {
     const { name, totalCash } = req.body;
+
     const user = await userSchema.findById(
-      jwt.verify(req.headers["authorization"].split(" ")[1], process.env.SECRET)
-    );
+      jwt.verify(req.headers["authorization"].split(" ")[1] , process.env.SECRET).id)
+    ;
 
     if (!name) {
       return res.status(422).json({ message: "Dados não informados" });
     }
 
-    const cashier = cashiersSchema.findOne({ name });
+    const cashier = await cashiersSchema.findOne({ name });
+
 
     if (!cashier) {
       const newCashier = new cashiersSchema({
@@ -51,7 +54,8 @@ module.exports = class CashiersController {
       }
     } else {
       cashier.state = "Aberto";
-      cashier.totalCash;
+      cashier.totalCash = totalCash;
+
       cashier.history.push({
         user: user.name,
         operation: "Abertura",
@@ -66,7 +70,7 @@ module.exports = class CashiersController {
           description: `O usuário ${user.name} abriu o caixa ${name} com o valor de ${totalCash}`,
         });
         await cashier.save();
-        return res.status(201).json({ message: "Caixa aberto com sucesso" });
+        return res.status(200).json({ message: "Caixa aberto com sucesso" });
       } catch (err) {
         return res.status(400).json({ message: "Erro ao abrir caixa", err });
       }
