@@ -12,7 +12,7 @@ module.exports = class CashiersController {
 
   static async openCashier(req, res) {
     const { name, totalCash } = req.body;
-
+    const ip = req.connection.remoteAddress;
     const user = await userSchema.findById(
       jwt.verify(req.headers["authorization"].split(" ")[1] , process.env.SECRET).id)
     ;
@@ -27,12 +27,13 @@ module.exports = class CashiersController {
       const newCashier = new cashiersSchema({
         name,
         totalCash,
-        state: "Aberto",
+        stateCashier: {state: "Aberto", ip},
         history: [
           {
             user: user.name,
             operation: "Abertura",
             value: totalCash,
+            ip,
             date: Date.now(),
           },
         ],
@@ -53,17 +54,22 @@ module.exports = class CashiersController {
       }
     } else {
 
-      if(cashier.state === "Aberto"){
-        return res.status(400).json({ message: "Caixa já está aberto" });
+      if(cashier.stateCashier.state === "Aberto"){
+        if(cashier.stateCashier.ip !== ip){
+          return res.status(400).json({ message: "Caixa já está aberto em outra maquina!" });
+        } else {
+          return res.status(200).json({ message: "Caixa já está aberto!", data: {cashierId: cashier.id} });
+        }
       }
 
-      cashier.state = "Aberto";
+      cashier.stateCashier = {state: "Aberto", ip},
       cashier.totalCash = totalCash;
 
       cashier.history.push({
         user: user.name,
         operation: "Abertura",
         value: totalCash,
+        ip,
         date: Date.now(),
       });
 
