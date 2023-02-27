@@ -8,14 +8,19 @@ module.exports = {
       tags: ["PDV"],
       description: "Get a PDV by day",
       operationId: "getByDayPDV",
+      parameters: [],
       requestBody: {
         content: {
           "application/json": {
-            day: {
-                type: "string",
-                description: "Day to get PDV",
-                example: "2021-05-01",
-            },
+            schema: {
+              properties: {
+                day: {
+                  type: "Date",
+                  description: "Day to search",
+                  example: "2021-05-01",
+                },
+              },
+            }
           },
         },
       },

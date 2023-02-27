@@ -17,8 +17,6 @@ module.exports = class CashiersController {
       jwt.verify(req.headers["authorization"].split(" ")[1] , process.env.SECRET).id)
     ;
 
-    console.log(req.connection)
-
     if (!name) {
       return res.status(422).json({ message: "Dados não informados" });
     }
@@ -58,7 +56,7 @@ module.exports = class CashiersController {
 
       if(cashier.stateCashier.state === "Aberto"){
         if(cashier.stateCashier.ip !== ip){
-          return res.status(400).json({ message: "Caixa já está aberto em outra maquina!" });
+          return res.status(400).json({ message: "Caixa já está aberto em outra maquina!", data: {cashierId: cashier.id} });
         } else {
           return res.status(200).json({ message: "Caixa já está aberto!", data: {cashierId: cashier.id} });
         }
