@@ -8,9 +8,10 @@ module.exports = class HomeController {
       const startDate = new Date(req.query.startDate);
       const endDate = new Date(req.query.endDate);
 
-      var totalSell = 0;
+      var totalSell = { allDays: 0, days: [] };
       var totalStock = 0;
       var totalPatrimony = 0;
+
 
       if (!startDate || !endDate) {
         return res.status(422).json({ message: "Datas não informada" });
@@ -30,14 +31,20 @@ module.exports = class HomeController {
       });
 
       patrimony.forEach((element) => {
-        if (element.realStock > 0 && element.priceCost > 0) {
+        if (element.realStock > 0 && element.priceCost > 0 && element.isActive === 'Ativo') {
           totalPatrimony += element.priceCost * element.realStock;
         }
       });
 
       pdv.forEach((element) => {
-        totalSell += element.totalSell;
+        if(element.state === 'Fechado') {
+          element.createdAt = new Date(element.createdAt);
+          totalSell.allDays += element.totalSell;
+          totalSell.days.push({day: element.createdAt.getDate(), value: element.totalSell});
+        };
       });
+
+
 
       return res.status(200).json({ totalSell, totalStock, totalPatrimony });
     } catch (err) {

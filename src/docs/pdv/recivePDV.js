@@ -2,9 +2,9 @@ module.exports = {
   post: {
     security: [
       {
-         bearerAuth: []
-      }
-   ],
+        bearerAuth: [],
+      },
+    ],
     tags: ["PDV"],
     description: "Recive a PDV",
     operationId: "recivePDV",
@@ -13,23 +13,25 @@ module.exports = {
         name: "id", // name of the param
         in: "path", // location of the param
         required: true, // Mandatory param
-        schema: {
-          type: "string",
-        },
+        description: "PDV ID", // param description
       },
     ],
     requestBody: {
       content: {
         "application/json": {
-          paymentMethods: {
-            type: "array",
-            description: "Payment method",
-            example: "[{Dinheiro: 3.00}, {Cartão: 2.00}]",
-          },
-          cashierID: {
-            type: "string",
-            description: "Cashier ID",
-            example: "60a9f1b5b8f5a8a0f4e1f2f2",
+          schema: {
+            properties: {
+              paymentMethods: {
+                type: "array",
+                description: "Payment method",
+                example: "[{Dinheiro: 3.00}, {Cartão: 2.00}]",
+              },
+              cashierID: {
+                type: "string",
+                description: "Cashier ID",
+                example: "60a9f1b5b8f5a8a0f4e1f2f2",
+              },
+            },
           },
         },
       },
