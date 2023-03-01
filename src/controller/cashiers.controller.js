@@ -173,7 +173,7 @@ module.exports = class CashiersController {
       await addLogs(user, {
         action: "Reforço de caixa",
         date: Date.now(),
-        description: `O usuário ${user.name} reforçou o caixa ${cashier.name} com o valor de ${value}`,
+        description: `O usuário ${user.name} reforçou o caixa ${cashier.name} com o valor de ${totalCash}`,
       });
       return res.status(201).json({ message: "Caixa reforçado com sucesso" });
     } catch (err) {
@@ -183,31 +183,31 @@ module.exports = class CashiersController {
 
   static async removeCashier(req, res) {
     try {
-      const { id } = req.params;
-      const { totalCash } = req.body;
-      const user = await userSchema.findById(
+    const { id } = req.params;
+    const { totalCash } = req.body;
+    const user = await userSchema.findById(
         jwt.verify(
           req.headers["authorization"].split(" ")[1],
           process.env.SECRET
-        ).id
+          ).id
       );
-
+      
       if (!user) {
         return res.status(401).json({ message: "Usuário não autorizado" });
       }
-
+      
       if (!id || !totalCash) {
         return res.status(422).json({ message: "Dados não informados" });
       }
-
+      
       const cashier = await cashiersSchema.findById(id);
-
+      
       if (!cashier) {
         return res.status(404).json({ message: "Caixa não encontrado" });
       }
-
+      
       cashier.totalCash -= totalCash;
-
+      
       cashier.history.push({
         user: user.name,
         operation: "Sangria",
@@ -219,7 +219,7 @@ module.exports = class CashiersController {
       await addLogs(user, {
         action: "Sangria de caixa",
         date: Date.now(),
-        description: `O usuário ${user.name} sangrou o caixa ${cashier.name} com o valor de ${value}`,
+        description: `O usuário ${user.name} sangrou o caixa ${cashier.name} com o valor de ${totalCash}`,
       });
       return res.status(201).json({ message: "Caixa sangrado com sucesso" });
     } catch (err) {
