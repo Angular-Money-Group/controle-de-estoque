@@ -228,7 +228,7 @@ module.exports = class CashiersController {
   }
 
   static async getCashiersData(req, res) {
-    const { id } = req.params;
+    const { id } = req.query;
 
     const cashiers = await cashiersSchema.findById(id);
 

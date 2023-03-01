@@ -12,7 +12,7 @@ module.exports = {
             // expected params.
             {
                 name: "id", // name of the param
-                in: "path", // location of the param
+                in: "query", // location of the param
                 required: true, // Mandatory param
                 schema: {
                     type: "string",
