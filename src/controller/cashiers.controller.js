@@ -110,7 +110,7 @@ module.exports = class CashiersController {
       );
       const cashier = await cashiersSchema.findById(id);
 
-      if (!id || !totalCash) {
+      if (!id || totalCash === undefined || totalCash === null) {
         return res.status(422).json({ message: "Dados não informados" });
       }
 
