@@ -249,7 +249,7 @@ module.exports = class CashiersController {
 
       return res.status(200).json({
         message: "Operação realizada com sucesso",
-        data: totalPayments,
+        data: {...cashiers, totalPayments},
       });
     } catch (err) {
       return res.status(400).json({ message: "Erro ao buscar caixa", err });
