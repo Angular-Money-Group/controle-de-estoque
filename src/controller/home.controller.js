@@ -64,7 +64,8 @@ module.exports = class HomeController {
       });
 
       patrimony.forEach((element) => {
-        if (element.realStock > 0 && element.priceCost > 0 && element.isActive === 'Ativo') {
+        console.log(element)
+        if (element.realStock > 0 && element.priceCost > 0 && element.isActive === true) {
           totalPatrimony += element.priceCost * element.realStock;
         }
       });
