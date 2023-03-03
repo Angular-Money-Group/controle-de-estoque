@@ -46,8 +46,13 @@ module.exports = class AuthController {
       date: new Date(),
       description: 'Usuário logou no sistema'
     })
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        path: '/auth/v1/refreshToken',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
 
-      return res.status(200).json({ message: "Autenticação realizada com sucesso!", accessToken, refreshToken });
+      return res.status(200).json({ message: "Autenticação realizada com sucesso!", accessToken });
     } catch (err) {
       console.log(err);
       return res
@@ -72,15 +77,21 @@ module.exports = class AuthController {
       const accessToken = jwt.sign({ email: decoded.email, name: user.name, id: user.id, role: user.role }, process.env.SECRET, {
         expiresIn: '45m'
       });
-  
-      return res.json({ message: "Refresh realizado com sucesso", accessToken });
-    } catch (error) {
+
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        path: '/auth/v1/refreshToken',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+
+      return res.status(200).json({ accessToken });
+      } catch (error) {
       return res.status(401).json({ message: 'Invalid refresh token' });
     }
   }
 
   static async register(req, res) {
-    const { name, email, role, password } = req.body;
+    const { name, email, cpfcnpjBusiness, password } = req.body;
 
     //validations
     if (!name) return res.status(422).json({ message: "Nome é obrigatorio" });
@@ -88,6 +99,8 @@ module.exports = class AuthController {
     if (!role) return res.status(422).json({ message: "Cargo é obrigatorio" });
 
     if (!email) return res.status(422).json({ message: "Email é obrigatorio" });
+
+    if (!cpfcnpjBusiness) return res.status(422).json({ message: "Cpf/Cnpj é obrigatorio" });
 
     if (!password) return res.status(422).json({ message: "Senha é obrigatorio" });
 
