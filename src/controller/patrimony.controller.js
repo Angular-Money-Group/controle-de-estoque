@@ -108,20 +108,6 @@ module.exports = class PatrimonyController {
         return res.status(404).json({ message: "Patrimonio não encontrado" });
       }
 
-      if (patrimony.patrimonyNumber !== patrimonyNumber) {
-        let productsByBarCode = await patrimonySchema.find({
-          barCode: { $regex: patrimonyNumber, $options: "i" },
-        });
-
-        if (productsByBarCode.length > 0) {
-          return res.status(422).json({
-            message: "Já existe um produto com esse codigo de patrimônio",
-          });
-        }
-
-        patrimony.patrimonyNumber = patrimonyNumber;
-      }
-
       patrimony.isActive = isActive;
       patrimony.observation = observation;
       patrimony.updatedAt = new Date(Date.now());

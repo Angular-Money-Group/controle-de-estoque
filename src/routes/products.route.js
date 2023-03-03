@@ -41,6 +41,7 @@ productsRouter.delete(
 productsRouter.post(
   "/products/stock/import",
   cors(),
+  verifyToken,
   upload.single('file'),
   ProductsController.importProductsExcel
 );
