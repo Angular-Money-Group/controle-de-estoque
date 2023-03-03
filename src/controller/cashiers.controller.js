@@ -191,12 +191,16 @@ module.exports = class CashiersController {
           process.env.SECRET
           ).id
       );
+
+      if(!id || id === undefined || id === null){
+        return res.status(422).json({ message: "Dados não informados" });
+      }
       
       if (!user) {
         return res.status(401).json({ message: "Usuário não autorizado" });
       }
       
-      if (!id || !totalCash) {
+      if (!totalCash) {
         return res.status(422).json({ message: "Dados não informados" });
       }
       

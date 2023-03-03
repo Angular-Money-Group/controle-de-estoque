@@ -17,7 +17,7 @@ module.exports = {
             description: "Mensagem de sucesso ou Erro", // desc
             example: "Operação realizada com sucesso",
           },
-          data: {
+          docs: {
             type: "array", // data-type
             items: {
               $ref: "#/components/schemas/Products",
@@ -39,6 +39,51 @@ module.exports = {
                 updatedAt: "2023-01-09T15:03:55.998Z",
               },
             ], // example of a title
+          },
+          totalDocs: {
+            type: "number", // data-type
+            description: "Total de produtos", // desc
+            example: 1, // example of a completed value
+          },
+          limit: {
+            type: "number", // data-type
+            description: "Limite de produtos", // desc
+            example: 10, // example of a completed value
+          },
+          totalPages: {
+            type: "number", // data-type
+            description: "Total de páginas", // desc
+            example: 1, // example of a completed value
+          },
+          page: {
+            type: "number", // data-type
+            description: "Página atual", // desc
+            example: 1, // example of a completed value
+          },
+          pagingCounter: {
+            type: "number", // data-type
+            description: "Contador de páginas", // desc
+            example: 1, // example of a completed value
+          },
+          hasPrevPage: {
+            type: "boolean", // data-type
+            description: "Possui página anterior", // desc
+            example: false, // example of a completed value
+          },
+          hasNextPage: {
+            type: "boolean", // data-type
+            description: "Possui próxima página", // desc
+            example: false, // example of a completed value
+          },
+          prevPage: {
+            type: "number", // data-type
+            description: "Página anterior", // desc
+            example: 1, // example of a completed value
+          },
+          nextPage: {
+            type: "number",
+            description: "Proxima pagina",
+            example: 1,
           },
         },
       },

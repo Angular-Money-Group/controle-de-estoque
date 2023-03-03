@@ -18,6 +18,24 @@ module.exports = {
         },
         description: "Buscar nome ou codigo de barras do produto", // param desc.
       },
+      {
+        name: "page", // name of the param
+        in: "query", // location of the param
+        required: false, // Mandatory param
+        schema: {
+          type: "number",
+        },
+        description: "Pagina a buscar", // param desc.
+      },
+      {
+        name: "limit", // name of the param
+        in: "query", // location of the param
+        required: false, // Mandatory param
+        schema: {
+          type: "number",
+        },
+        description: "Limite de registros", // param desc.
+      },
     ], // expected params.
     // expected responses
     responses: {

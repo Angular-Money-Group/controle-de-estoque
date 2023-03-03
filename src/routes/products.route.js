@@ -1,8 +1,12 @@
+const multer = require("multer");
+
 const express = require("express");
 const productsRouter = express.Router();
 const cors = require("cors");
 const ProductsController = require("../controller/products.controller");
 const verifyToken = require("../utils/verifyToken");
+
+const upload = multer();
 
 productsRouter.get(
   "/products",
@@ -33,6 +37,18 @@ productsRouter.delete(
   cors(),
   verifyToken,
   ProductsController.deleteProduct
+);
+productsRouter.post(
+  "/products/stock/import",
+  cors(),
+  upload.single('file'),
+  ProductsController.importProductsExcel
+);
+productsRouter.get(
+  "/products/stock/export",
+  cors(),
+  verifyToken,
+  ProductsController.exportProductsExcel
 );
 
 module.exports = productsRouter;
