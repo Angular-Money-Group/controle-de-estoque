@@ -339,12 +339,6 @@ module.exports = class ProductsController {
 
       const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
-
-      res.setHeader(
-        "Content-Disposition",
-        "attachment; filename=products.xlsx"
-      );
-      res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       res.status(200).download("products.xlsx", buffer, (err) => {
         if (err) {
           console.log(err);
