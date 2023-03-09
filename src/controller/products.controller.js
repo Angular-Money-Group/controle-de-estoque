@@ -344,7 +344,6 @@ module.exports = class ProductsController {
         "Content-Disposition",
         "attachment; filename=products.xlsx"
       );
-      res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
       res.status(200).send(buffer);
     } catch (err) {
       console.log(err);
