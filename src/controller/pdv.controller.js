@@ -23,17 +23,27 @@ module.exports = class PDVController {
 
   static async createPDV(req, res) {
     try {
-      const { products, totalSell, cpfcnpjClient } = req.body;
+      const { products, totalSell, cpfcnpjClient, paymentMethods, cashierID } = req.body;
 
       const bearer = req.headers["authorization"].split(" ")[1];
       const userID = jwt.verify(bearer, process.env.SECRET);
       const user = await usersSchema.findById(userID.id);
+      const cashier = await cashiersSchema.findById(cashierID);
 
       if (!userID || !products || !totalSell) {
         return res.status(422).json({ message: "Dados não informados" });
       }
 
+      if (!cashier) {
+        console.error("Caixa não encontrado");
+      }
+
       const isClient = clientsSchema.findOne({ cpf: cpfcnpjClient });
+
+      const newLog = {
+        action: "Receber PDV",
+        date: Date.now(),
+      };
 
       if (!isClient) {
         const newClient = new clientsSchema({
@@ -46,85 +56,11 @@ module.exports = class PDVController {
           createdAt: Date.now(),
         });
         await newClient.save();
-      }
 
-      const newPDV = new PDVSchema({
-        user: user.name,
-        cpfcnpjClient,
-        products,
-        totalSell,
-        state: "Aberto",
-        createdAt: Date.now(),
-      });
+        newLog.description = `Recebeu o PDV ${pdv.id} no valor de R$${pdv.totalSell}`
 
-      await newPDV.save();
-      return res.status(201).json({ message: "PDV criado com sucesso" });
-    } catch (err) {
-      return res.status(400).json({ message: "Erro ao criar PDV", err });
-    }
-  }
-
-  static async recivePDV(req, res) {
-    try {
-      const { id } = req.params;
-      const { paymentMethods, cashierID } = req.body;
-      const bearer = jwt.verify(
-        req.headers["authorization"].split(" ")[1],
-        process.env.SECRET
-      );
-      const user = await usersSchema.findById(bearer.id);
-      const pdv = await PDVSchema.findById(id);
-
-      const client = await clientsSchema.findOne({
-        cpfcnpj: pdv.cpfcnpjClient,
-      });
-
-      if (pdv.state === "Fechado") {
-        return res.status(400).json({ message: "PDV já foi recebido" });
-      }
-
-      if (!user) {
-        throw console.error("Usuário não encontrado");
-      }
-
-      if (!id || !paymentMethods) {
-        return res.status(422).json({ message: "Dados não informados" });
-      }
-
-      if (!pdv) {
-        return res.status(404).json({ message: "PDV não encontrado" });
-      }
-      const totalSellPayment = pdv.paymentMethods.reduce((acc, method) => {
-        return acc + method.value;
-      }, 0);
-
-      if (totalSellPayment < pdv.totalSell) {
-        return res
-          .status(400)
-          .json({ message: "Valor recebido menor que o valor da venda" });
-      }
-
-      pdv.state = "Fechado";
-      pdv.paymentMethods = paymentMethods;
-
-      pdv.paymentMethods.forEach(async (method) => {
-        if (method.method === "Dinheiro") {
-          const cashier = await cashiersSchema.findById(cashierID);
-          if (!cashier) {
-            console.error("Caixa não encontrado");
-          } else {
-            cashier.totalCash += method.value;
-            cashier.save();
-          }
-        }
-      });
-
-      const newLog = {
-        action: "Receber PDV",
-        date: Date.now(),
-      };
-
-      if (client) {
+        user.logs.push(newLog);
+      } else {
         const newPurchase = {
           productsID: pdv.products,
           paymentMethods: pdv.paymentMethods,
@@ -132,18 +68,41 @@ module.exports = class PDVController {
           date: Date.now(),
         };
 
-        client.purchases.push(newPurchase);
-        client.save();
-        (newLog.description = `Recebeu o PDV ${pdv.id} de ${client.name} no valor de R$${pdv.totalSell}`),
-          user.logs.push(newLog);
-      } else {
-        (newLog.description = `Recebeu o PDV ${pdv.id} no valor de R$${pdv.totalSell}`),
-          user.logs.push(newLog);
-      }
+        isClient.purchases.push(newPurchase);
+        isClient.save();
 
+        newLog.description = `Recebeu o PDV ${pdv.id} de ${isClient.name} no valor de R$${pdv.totalSell}`
+
+        user.logs.push(newLog);
+      }
+      
+      paymentMethods.forEach(async (method) => {
+        if (method.method === "Dinheiro") {
+            cashier.totalCash += method.value;
+            cashier.save();
+        }
+      });
+
+      const newPDV = new PDVSchema({
+        user: user.name,
+        cpfcnpjClient,
+        products,
+        totalSell,
+        paymentMethods,
+        state: "Fechado",
+        createdAt: Date.now(),
+      });
+      
+      cashier.sales.push({
+        user: user.name,
+        sellID: newPDV.id,
+        date: Date.now(),
+      });
+      
+      await newPDV.save();
       await addLogs(user, newLog);
-      await pdv.save();
-      updateStock(pdv.products);
+      await cashier.save();
+      updateStock(products);
       return res.status(200).json({ message: "PDV recebido com sucesso" });
     } catch (err) {
       console.log(err);

@@ -13,7 +13,13 @@ const cashiersSchema = new mongoose.model('Cashiers', {
             date: Date,
         }
     ],
-    sales: [Number],
+    sales: [
+        {
+            user: String,
+            sellID: String,
+            date: Date,
+        }
+    ],
     createdAt: Date
 })
 
