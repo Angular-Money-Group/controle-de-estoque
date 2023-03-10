@@ -34,48 +34,11 @@ module.exports = class PDVController {
         return res.status(422).json({ message: "Dados não informados" });
       }
 
-      if (!cashier) {
-        console.error("Caixa não encontrado");
-      }
-
-      const isClient = clientsSchema.findOne({ cpf: cpfcnpjClient });
-
       const newLog = {
         action: "Receber PDV",
         date: Date.now(),
       };
 
-      if (!isClient) {
-        const newClient = new clientsSchema({
-          name: "",
-          cpfcnpj: cpfcnpjClient,
-          email: "",
-          phone: "",
-          address: "",
-          purchases: [],
-          createdAt: Date.now(),
-        });
-        await newClient.save();
-
-        newLog.description = `Recebeu o PDV ${pdv.id} no valor de R$${pdv.totalSell}`
-
-        user.logs.push(newLog);
-      } else {
-        const newPurchase = {
-          productsID: pdv.products,
-          paymentMethods: pdv.paymentMethods,
-          totalValue: pdv.totalSell,
-          date: Date.now(),
-        };
-
-        isClient.purchases.push(newPurchase);
-        isClient.save();
-
-        newLog.description = `Recebeu o PDV ${pdv.id} de ${isClient.name} no valor de R$${pdv.totalSell}`
-
-        user.logs.push(newLog);
-      }
-      
       paymentMethods.forEach(async (method) => {
         if (method.method === "Dinheiro") {
             cashier.totalCash += method.value;
@@ -93,11 +56,48 @@ module.exports = class PDVController {
         createdAt: Date.now(),
       });
       
-      cashier.sales.push({
-        user: user.name,
-        sellID: newPDV.id,
-        date: Date.now(),
-      });
+      if (cashier) {
+        cashier.sales.push({
+          user: user.name,
+          sellID: newPDV.id,
+          date: Date.now(),
+        });
+      }
+
+      if(cpfcnpjClient){ 
+        const isClient = clientsSchema.findOne({ cpf: cpfcnpjClient });
+        if (!isClient || isClient === null) {
+          const newClient = new clientsSchema({
+            name: "",
+            cpfcnpj: cpfcnpjClient,
+            email: "",
+            phone: "",
+            address: "",
+            purchases: [],
+            createdAt: Date.now(),
+          });
+          await newClient.save();
+  
+          newLog.description = `Recebeu o PDV ${newPDV.id} no valor de R$${newPDV.totalSell}`
+  
+          user.logs.push(newLog);
+        } else {
+  
+          const newPurchase = {
+            productsID: newPDV.products,
+            paymentMethods: newPDV.paymentMethods,
+            totalValue: newPDV.totalSell,
+            date: Date.now(),
+          };
+  
+          isClient.purchases.push(newPurchase);
+          isClient.save();
+  
+          newLog.description = `Recebeu o PDV ${newPDV.id} de ${isClient.name} no valor de R$${newPDV.totalSell}`
+  
+          user.logs.push(newLog);
+        }
+      }
       
       await newPDV.save();
       await addLogs(user, newLog);
