@@ -64,14 +64,12 @@ module.exports = class HomeController {
       });
 
       patrimony.forEach((element) => {
-        console.log(element)
         if (element.realStock > 0 && element.priceCost > 0 && element.isActive === true) {
           totalPatrimony += element.priceCost * element.realStock;
         }
       });
 
       pdv.forEach((element) => {
-        if(element.state === 'Fechado') {
           element.createdAt = new Date(element.createdAt);
           totalSell.allDays += element.totalSell;
           totalSell.days.forEach((day) => {
@@ -79,7 +77,6 @@ module.exports = class HomeController {
               day.value = element.totalSell;
             }
           });
-        };
       });
 
 
