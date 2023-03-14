@@ -1,9 +1,18 @@
-const pdv = require('./pdv');
+const createPDV = require("./createPDV");
+const getPDV = require("./getPDV");
+const getPDVbyId = require("./getPDVbyId");
 
 module.exports = {
     paths:{
-        '/pdv':{
-            ...pdv,
-        }
+        '/getPDV':{
+            ...getPDV,
+        },
+        '/getPDV/{id}':{
+            ...getPDVbyId,
+        },
+        '/createPDV':{
+            ...createPDV,
+        },
+
     }
 }

@@ -1,5 +1,10 @@
 module.exports = {
   post: {
+    security: [
+      {
+         bearerAuth: []
+      }
+   ],
     tags: ["PDV"],
     description: "Create a new PDV",
     operationId: "createPDV",

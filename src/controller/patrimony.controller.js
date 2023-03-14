@@ -1,4 +1,5 @@
 const patrimonySchema = require("../models/patrimonySchema");
+const counterSchema = require("../models/counterSchema");
 
 module.exports = class PatrimonyController {
   static async getPatrimony(req, res) {
@@ -44,19 +45,8 @@ module.exports = class PatrimonyController {
         priceCost,
         description,
         category,
-        patrimonyNumber,
         initialStock,
       } = req.body;
-
-      let patrimonyByPatrimonyNumber = await patrimonySchema.findOne({
-        patrimonyNumber: patrimonyNumber,
-      });
-
-      if (patrimonyByPatrimonyNumber.length > 0) {
-        return res
-          .status(422)
-          .json({ message: "Numero de patrimonio ja cadastrado" });
-      }
 
       if (!name) {
         return res.status(422).json({ message: "Nome é obrigatorio" });
@@ -81,8 +71,9 @@ module.exports = class PatrimonyController {
         priceCost,
         description,
         category,
-        patrimonyNumber,
+        patrimonyNumber: await getNextSequenceValue("patrimonyId"),
         initialStock,
+        isActive: true,
         realStock,
         createdAt,
       });
@@ -117,20 +108,6 @@ module.exports = class PatrimonyController {
         return res.status(404).json({ message: "Patrimonio não encontrado" });
       }
 
-      if (patrimony.patrimonyNumber !== patrimonyNumber) {
-        let productsByBarCode = await patrimonySchema.find({
-          barCode: { $regex: patrimonyNumber, $options: "i" },
-        });
-
-        if (productsByBarCode.length > 0) {
-          return res.status(422).json({
-            message: "Já existe um produto com esse codigo de patrimônio",
-          });
-        }
-
-        patrimony.patrimonyNumber = patrimonyNumber;
-      }
-
       patrimony.isActive = isActive;
       patrimony.observation = observation;
       patrimony.updatedAt = new Date(Date.now());
@@ -160,3 +137,20 @@ module.exports = class PatrimonyController {
     return res.status(200).json({ message: "Produto excluido com sucesso" });
   }
 };
+
+async function getNextSequenceValue(sequenceName) {
+
+  const counter = await counterSchema.findById(sequenceName)
+
+  if (!counter) {
+    const newCounter = new counterSchema({
+      _id: sequenceName,
+      seq: 0
+    })
+    await newCounter.save()
+    return 0
+  } else {
+    const sequenceDocument = await counterSchema.findByIdAndUpdate(sequenceName, { $inc: { seq: 1 } }, { new: true });
+    return sequenceDocument.seq;
+  }
+}
