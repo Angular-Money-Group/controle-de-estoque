@@ -14,9 +14,6 @@ module.exports = {
         '/createPDV':{
             ...createPDV,
         },
-        '/recivePDV/{id}':{
-            ...recivePDV,
-        },
 
     }
 }
