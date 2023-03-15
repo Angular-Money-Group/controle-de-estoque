@@ -50,8 +50,10 @@ module.exports = class HomeController {
         return res.status(422).json({ message: "Datas não informada" });
       }
 
+      console.log (startDate, endDate)
+
       const pdv = await PDVSchema.find({
-        createdAt: { $gte: startDate, $lte: endDate },
+        createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
       });
 
       const products = await productSchema.find();
@@ -69,12 +71,14 @@ module.exports = class HomeController {
         }
       });
 
+      console.log(pdv)
+
       pdv.forEach((element) => {
           element.createdAt = new Date(element.createdAt);
           totalSell.allDays += element.totalSell;
           totalSell.days.forEach((day) => {
             if(day.day === element.createdAt.getDate()) {
-              day.value = element.totalSell;
+              day.value += element.totalSell;
             }
           });
       });
