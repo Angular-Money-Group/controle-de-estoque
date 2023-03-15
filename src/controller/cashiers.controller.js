@@ -63,7 +63,7 @@ module.exports = class CashiersController {
             data: { cashierId: cashier.id },
           });
         } else {
-          return res.status(200).json({
+          return res.status(202).json({
             message: "Caixa já está aberto!",
             data: { cashierId: cashier.id },
           });
