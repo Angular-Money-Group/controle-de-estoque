@@ -10,11 +10,11 @@ require("dotenv").config();
 
 module.exports = class PDVController {
   static async getPDV(req, res) {
-    const { id } = req.query;
+    const { id } = req.params;
 
     PDVSchema.findById(id)
       .then((pdv) => {
-        return res.status(200).json(pdv);
+        return res.status(200).json({ message: "Operação realizada com sucesso", pdv});
       })
       .catch((err) => {
         return res.status(400).json({ message: "Erro ao buscar PDV", err });
