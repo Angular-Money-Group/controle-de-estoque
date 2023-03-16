@@ -14,7 +14,7 @@ module.exports = class PDVController {
 
     PDVSchema.findById(id)
       .then((pdv) => {
-        return res.status(200).json({ message: "Operação realizada com sucesso", pdv});
+        return res.status(200).json({ message: "Operação realizada com sucesso", data: pdv});
       })
       .catch((err) => {
         return res.status(400).json({ message: "Erro ao buscar PDV", err });
