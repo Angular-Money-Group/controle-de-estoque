@@ -3,7 +3,15 @@ const mongoose = require("mongoose");
 const PDVSchema = new mongoose.model("PDV", {
   user: String,
   products: [
-    { productID: String, quantity: Number, price: Number, total: Number },
+    {
+      product: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Products",
+      },
+      quantity: Number,
+      price: Number,
+      total: Number,
+    },
   ],
   totalSell: Number,
   cpfcnpjClient: String,
