@@ -10,7 +10,7 @@ require("dotenv").config();
 
 module.exports = class PDVController {
   static async getPDV(req, res) {
-    const { id } = req.params;
+    const { id } = req.query;
 
     PDVSchema.findById(id)
       .then((pdv) => {
