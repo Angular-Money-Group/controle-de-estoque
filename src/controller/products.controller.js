@@ -41,7 +41,7 @@ module.exports = class ProductsController {
   }
 
   static async getProductsById(req, res) {
-    const id = req.params;
+    const { id } = req.params;
 
     if (!id) {
       return res.status(422).json({ message: "ID não informado" });
@@ -53,7 +53,7 @@ module.exports = class ProductsController {
       return res.status(404).json({ message: "Produto não encontrado" });
     }
 
-    return res.status(200).json({ data: product });
+    return res.status(200).json({  message: "Operação realizada com Sucesso" , data: product });
   }
 
   static async createProduct(req, res) {
