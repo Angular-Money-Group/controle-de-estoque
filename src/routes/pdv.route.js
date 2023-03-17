@@ -6,5 +6,6 @@ const verifyToken = require("../utils/verifyToken");
 pdvRouter.get("/getPDV", verifyToken, PDVController.getByDayPDV);
 pdvRouter.get("/getPDV/:id", verifyToken, PDVController.getPDV);
 pdvRouter.post("/createPDV", verifyToken, PDVController.createPDV);
+pdvRouter.put("/updatePDV/:id", verifyToken, PDVController.updatePDV);
 
 module.exports = pdvRouter;
