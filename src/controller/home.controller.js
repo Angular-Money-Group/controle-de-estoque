@@ -50,8 +50,6 @@ module.exports = class HomeController {
         return res.status(422).json({ message: "Datas não informada" });
       }
 
-      console.log (startDate, endDate)
-
       const pdv = await PDVSchema.find({
         createdAt: { $gte: new Date(startDate), $lte: new Date(endDate) },
       });
@@ -71,8 +69,6 @@ module.exports = class HomeController {
         }
       });
 
-      console.log(pdv)
-
       pdv.forEach((element) => {
           element.createdAt = new Date(element.createdAt);
           totalSell.allDays += element.totalSell;
@@ -82,8 +78,6 @@ module.exports = class HomeController {
             }
           });
       });
-
-
 
       return res.status(200).json({ totalSell, totalStock, totalPatrimony });
     } catch (err) {

@@ -110,7 +110,8 @@ module.exports = class PDVController {
         .json({ message: "PDV recebido com sucesso", data: newPDV.id });
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ message: "Erro ao receber PDV", err });
+      return res.status(400).json({ message: "Erro ao receber PDV", err
+     });
     }
   }
 

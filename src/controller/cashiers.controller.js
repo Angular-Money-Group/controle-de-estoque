@@ -183,35 +183,35 @@ module.exports = class CashiersController {
 
   static async removeCashier(req, res) {
     try {
-    const { id } = req.params;
-    const { totalCash } = req.body;
-    const user = await userSchema.findById(
+      const { id } = req.params;
+      const { totalCash } = req.body;
+      const user = await userSchema.findById(
         jwt.verify(
           req.headers["authorization"].split(" ")[1],
           process.env.SECRET
-          ).id
+        ).id
       );
 
-      if(!id || id === undefined || id === null){
+      if (!id || id === undefined || id === null) {
         return res.status(422).json({ message: "Dados não informados" });
       }
-      
+
       if (!user) {
         return res.status(401).json({ message: "Usuário não autorizado" });
       }
-      
+
       if (!totalCash) {
         return res.status(422).json({ message: "Dados não informados" });
       }
-      
+
       const cashier = await cashiersSchema.findById(id);
-      
+
       if (!cashier) {
         return res.status(404).json({ message: "Caixa não encontrado" });
       }
-      
+
       cashier.totalCash -= totalCash;
-      
+
       cashier.history.push({
         user: user.name,
         operation: "Sangria",
@@ -240,20 +240,35 @@ module.exports = class CashiersController {
       return res.status(404).json({ message: "Caixa não encontrado" });
     }
 
-    let totalPayments = [];
+    let totalPayments = [
+      { paymentMethod: "Dinheiro", value: 0 },
+      { paymentMethod: "Cartão de crédito", value: 0 },
+      { paymentMethod: "Cartão de débito", value: 0 },
+      { paymentMethod: "Pix", value: 0 },
+      { paymentMethod: "Vale alimentação", value: 0 },
+      { paymentMethod: "Vale refeição", value: 0 },
+      { paymentMethod: "Vale presente", value: 0 },
+      { paymentMethod: "Outros", value: 0 },
+    ];
 
     try {
       cashiers.sales.forEach(async (sales) => {
-        const pdv = await PDVSchema.findById(sales);
+        const pdv = await PDVSchema.findById(sales.sellID);
 
-        pdv.sale.paymentMethods.reduce((acc, payment) => {
-          totalPayments.push(payment);
-        }, 0);
+        if (pdv && pdv.createdAt >= cashiers.history[cashiers.history.length - 1].date && cashiers.history[cashiers.history.length - 1].operation === "Abertura") {
+          pdv.paymentMethods.forEach((payment) => {
+            totalPayments.forEach((total) => {
+              if (payment.paymentMethod === total.paymentMethod) {
+                total.value += payment.value;
+              }
+            });
+          });
+        }
       });
 
       return res.status(200).json({
         message: "Operação realizada com sucesso",
-        data: {cashiers, totalPayments},
+        data: totalPayments ,
       });
     } catch (err) {
       return res.status(400).json({ message: "Erro ao buscar caixa", err });
