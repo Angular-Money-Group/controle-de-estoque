@@ -252,7 +252,7 @@ module.exports = class CashiersController {
     ];
 
     try {
-      cashiers.sales.forEach(async (sales) => {
+      await cashiers.sales.forEach(async (sales) => {
         const pdv = await PDVSchema.findById(sales.sellID);
 
         if (pdv && pdv.createdAt >= cashiers.history[cashiers.history.length - 1].date && cashiers.history[cashiers.history.length - 1].operation === "Abertura") {
@@ -268,7 +268,7 @@ module.exports = class CashiersController {
 
       return res.status(200).json({
         message: "Operação realizada com sucesso",
-        data: totalPayments ,
+        data: totalPayments
       });
     } catch (err) {
       return res.status(400).json({ message: "Erro ao buscar caixa", err });
