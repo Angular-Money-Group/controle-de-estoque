@@ -240,39 +240,26 @@ module.exports = class CashiersController {
       return res.status(404).json({ message: "Caixa não encontrado" });
     }
 
-    let totalPayments = [
-      { paymentMethod: "Dinheiro", value: 0 },
-      { paymentMethod: "Cartão de crédito", value: 0 },
-      { paymentMethod: "Cartão de débito", value: 0 },
-      { paymentMethod: "Pix", value: 0 },
+    const totalSeller = [
+      {paymentMethods: "Dinheiro", value: 0},
+      {paymentMethods: "Cartão de Débito", value: 0},
+      {paymentMethods: "Cartão de Crédito", value: 0},
+      {paymentMethods: "Pix", value: 0},
     ];
-
-    try {
-      totalPayments = await getTotalPayments(cashiers, totalPayments);
-
-      return res.status(200).json({
-        message: "Operação realizada com sucesso",
-        data: totalPayments
-      });
-    } catch (err) {
-      return res.status(400).json({ message: "Erro ao buscar caixa", err });
+    
+    for (let sales of cashiers.sales) {
+      const sale = await PDVSchema.findById(sales.sellID);
+      if (sale) {
+        for (let paymentMethods of sale.paymentMethods) {
+          for (let fechamento of totalSeller) {
+            if (paymentMethods.method === fechamento.paymentMethods) {
+              fechamento.value += paymentMethods.value;
+            }
+          }
+        }
+      }
     }
+
+    return res.status(200).json({ message: "Caixa encontrado", data: totalSeller });
   }
 };
-
-
-async function getTotalPayments(cashiers, totalPayments) {
-  await cashiers.sales.forEach(async (sales) => {
-    const pdv = await PDVSchema.findById(sales.sellID);
-    if (pdv) {
-      await pdv.paymentMethods.forEach((payment) => {
-        totalPayments.forEach((total) => {
-          if (payment.paymentMethod === total.paymentMethod) {
-            total.value += payment.value;
-          }
-        });
-      });
-      return totalPayments;
-    }
-  });
-}

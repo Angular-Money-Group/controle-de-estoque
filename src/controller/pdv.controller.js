@@ -43,6 +43,9 @@ module.exports = class PDVController {
       };
 
       paymentMethods.forEach(async (method) => {
+        if(!method.method || !method.value) {
+          return res.status(422).json({ message: "Metodo não informados" });
+        }
         if (method.method === "Dinheiro") {
           cashier.totalCash += method.value;
           cashier.save();
