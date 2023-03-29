@@ -245,26 +245,10 @@ module.exports = class CashiersController {
       { paymentMethod: "Cartão de crédito", value: 0 },
       { paymentMethod: "Cartão de débito", value: 0 },
       { paymentMethod: "Pix", value: 0 },
-      { paymentMethod: "Vale alimentação", value: 0 },
-      { paymentMethod: "Vale refeição", value: 0 },
-      { paymentMethod: "Vale presente", value: 0 },
-      { paymentMethod: "Outros", value: 0 },
     ];
 
     try {
-      await cashiers.sales.forEach(async (sales) => {
-        const pdv = await PDVSchema.findById(sales.sellID);
-
-        if (pdv && pdv.createdAt >= cashiers.history[cashiers.history.length - 1].date && cashiers.history[cashiers.history.length - 1].operation === "Abertura") {
-          pdv.paymentMethods.forEach((payment) => {
-            totalPayments.forEach((total) => {
-              if (payment.paymentMethod === total.paymentMethod) {
-                total.value += payment.value;
-              }
-            });
-          });
-        }
-      });
+      totalPayments = await getTotalPayments(cashiers, totalPayments);
 
       return res.status(200).json({
         message: "Operação realizada com sucesso",
@@ -275,3 +259,20 @@ module.exports = class CashiersController {
     }
   }
 };
+
+
+async function getTotalPayments(cashiers, totalPayments) {
+  await cashiers.sales.forEach(async (sales) => {
+    const pdv = await PDVSchema.findById(sales.sellID);
+    if (pdv) {
+      await pdv.paymentMethods.forEach((payment) => {
+        totalPayments.forEach((total) => {
+          if (payment.paymentMethod === total.paymentMethod) {
+            total.value += payment.value;
+          }
+        });
+      });
+      return totalPayments;
+    }
+  });
+}
