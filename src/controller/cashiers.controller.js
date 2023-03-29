@@ -242,8 +242,8 @@ module.exports = class CashiersController {
 
     const totalSeller = [
       {paymentMethods: "Dinheiro", value: 0},
-      {paymentMethods: "Cartão de Débito", value: 0},
-      {paymentMethods: "Cartão de Crédito", value: 0},
+      {paymentMethods: "Cartão de débito", value: 0},
+      {paymentMethods: "Cartão de crédito", value: 0},
       {paymentMethods: "Pix", value: 0},
     ];
     
